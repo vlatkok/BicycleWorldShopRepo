@@ -1,0 +1,245 @@
+﻿@*model IEnumerable<BicycleWorldShop.Models.Product>*@
+
+@using PagedList;
+
+@using PagedList.Mvc;
+
+@model IPagedList<BicycleWorldShop.Models.Product>
+<link href="~/Content/PagedList.css" rel="stylesheet" />
+
+@{
+    ViewBag.Title = "Search";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    string sort = ViewBag.SortType;
+    Dictionary<BicycleWorldShop.Models.Product, int> resultdictionary = ViewData["SortResult"] as Dictionary<BicycleWorldShop.Models.Product, int>;
+    string option = Request.QueryString["option"];
+    string search = Request.QueryString["search"];
+
+}
+
+<h2>Search Product</h2>
+<style>
+    #imgname1 {
+        display: none;
+    }
+
+    .commentBox {
+        background-color: #efefef;
+        padding: 10px;
+        border-radius: 10px;
+    }
+
+    .starFade {
+        background-image: url('../../Content/Images/StarFade.gif');
+        min-width: 30px;
+        min-height: 30px;
+        display: inline-block;
+        cursor: pointer;
+    }
+
+    .starFadeN {
+        background-image: url('../../Content/Images/StarFade.gif');
+        min-width: 30px;
+        min-height: 30px;
+        display: inline-block;
+    }
+
+    .starGlow {
+        background-image: url('../../Content/Images/StarGlow.gif');
+        min-width: 30px;
+        min-height: 30px;
+        display: inline-block;
+        cursor: pointer;
+    }
+
+    .starGlowN {
+        background-image: url('../../Content/Images/StarGlow.gif');
+        min-width: 30px;
+        min-height: 30px;
+        display: inline-block;
+    }
+
+
+    .areaWidth {
+        width: 1000px;
+    }
+</style>
+
+<script type="text/javascript">
+
+    function NewSort(val) {
+
+        $("#sort").val(val);
+
+    }
+</script>
+
+<script type="text/javascript">
+
+    function productRate(m, n) {
+        var zeroresult = 0;
+        var r = parseInt(m);
+
+
+        if (zeroresult == r) {
+            $("#previewRating").val("Be the first to add rating to this product !!! ");
+
+        }
+        else {
+            for (var i = 1; i <= r; i++) {
+                $("#" + n + i).attr('class', 'starGlow');
+            }
+            // unselect remaining
+            for (var i = r + 1; i <= 5; i++) {
+                $("#" + n + i).attr('class', 'starFade');
+            }
+
+
+        }
+    }
+
+
+    function ShowHideSort()
+    {
+        var x = document.getElementById("sortdiv");
+        if (x.style.visibility == "hidden") {    
+            x.style.visibility = "visible";
+        } else {
+            x.style.visibility = "hidden";
+        }    
+    }   
+
+</script>
+
+
+@if (Model!=null && Model.Count > 1)
+{
+using (Html.BeginForm("Search", "Products", FormMethod.Get, new { id = "myform" }))
+{
+    //the following are search options
+
+    //the following are search options
+    <b> Search Option: </b>@Html.RadioButton("option", "Name") <text>Name</text> @Html.RadioButton("option", "Gender") <text> Gender </text>
+    @Html.RadioButton("option", "Feature")<text>Feature</text>    @Html.RadioButton("option", "Description")<text>Description</text>    @Html.RadioButton("option", "Brand")<text>Brand</text>    @Html.RadioButton("option", "Color")<text>Color</text>    @Html.RadioButton("option", "Availability")<text>Availability</text>@Html.TextBox("search") <input type="submit" name="submit" value="Search"  onsubmit="ShowHideSort()"/>
+    <br />
+
+        <div id="sortdiv">
+            <b> Sort By: </b>@Html.RadioButton("sort", "Customer Reviews Ascending")
+            <text>Customer Reviews Ascending</text> @Html.RadioButton("sort", "Customer Reviews Descending")
+            <text>Customer Reviews Descending </text>
+            @Html.RadioButton("sort", "Price Low to High")
+            <text>Price Low to High</text>@Html.RadioButton("sort", "Price High to Low")
+            <text>Price High to Low</text>
+            <input type="submit" name="submit2" value="Sort" />
+            <br />
+            <br />
+            <br />
+        </div>
+
+
+
+}
+
+}
+@if (Model == null)
+{
+
+    using (Html.BeginForm("Search", "Products", FormMethod.Get, new { id = "myform" }))
+    {
+        //the following are search options
+
+        //the following are search options
+        <b> Search Option: </b>@Html.RadioButton("option", "Name") <text>Name</text> @Html.RadioButton("option", "Gender") <text> Gender </text>
+        @Html.RadioButton("option", "Feature")<text>Feature</text>    @Html.RadioButton("option", "Description")<text>Description</text>    @Html.RadioButton("option", "Brand")<text>Brand</text>    @Html.RadioButton("option", "Color")<text>Color</text>    @Html.RadioButton("option", "Availability")<text>Availability</text>@Html.TextBox("search") <<input type="submit" name="submit" value="Search" onsubmit="ShowHideSort()" />
+        <br />
+
+
+    }
+
+}
+
+
+
+
+
+        @if (Model == null)
+        {
+            <span>No records found...... Please try again !!! </span>
+        }
+
+        else
+        {
+            <table>        
+
+
+
+                <tr>
+                    <td align="center">
+                        @foreach (var product in Model)
+                        {
+
+
+                            <div class="col-xs-12 col-md-3">
+                                <div class="thumbnail">
+                                    <a href="~/Products/Preview/@product.Name">
+
+                                        @if (product.Color == null || product.Color.ToString().Equals("no"))
+                                        {  <img class="img-responsive" src="~/Content/Images/Products/@(product.Name).jpg" name=@product.Name>}
+                                        else
+                                        {    <img class="img-responsive" src="~/Content/Images/Products/@(product.Name)_@(product.Color).jpg" name=@product.Name>
+                                        }
+                                    </a>
+                                    <div class="caption text-center">
+                                        <p>
+                                            <b><a href="~/Products/Preview/@product.Name"> @product.Name</a> </b>
+                                        </p>
+                                        @if (sort == "Customer Reviews Descending" || sort == "Customer Reviews Ascending")
+                                        { <div>
+
+                                            @if (resultdictionary.ContainsKey(product) && resultdictionary[product] > 0)
+                                            {
+                                                for (int i = 1; i <= 5; i++)
+                                                {
+                                                    string fname = product.Id.ToString() + i;
+                                                    <span id='@fname'></span>
+                                                }
+
+
+                                                //  <span id="prodRate2"></span><span id="prodRate3"></span><span id="prodRate4"></span><span id="prodRate5"></span>
+                                            }
+
+                                            <a href="~/Products/Preview/@product.Name">  <label id="previewRating"></label></a>
+                                        </div>
+
+                                        <script> productRate('@resultdictionary[product]', '@product.Id.ToString()') </script>
+
+
+                                        }
+
+                                        <p>
+                                            <b>@product.Price USD</b>
+                                        </p>
+                                        <p class="text-center">
+                                            @Html.ActionLink("Add to cart", "AddToCart", "ShoppingCart", new { id = product.Id }, new { @class = "btn btn-info" })
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </td>
+
+                </tr>
+                <tr>
+                    <td align="left">
+                        @Html.PagedListPager(Model, pageNumber => Url.Action("Search", new
+                   {
+                       pageNumber,
+                       option = Request.QueryString["option"],
+                       search = Request.QueryString["search"],
+                       sort = Request.QueryString["sort"]
+                   }))
+                    </td>
+                </tr>
+            </table>
+        }

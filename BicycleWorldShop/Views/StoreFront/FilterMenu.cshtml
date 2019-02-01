@@ -1,0 +1,847 @@
+﻿@model IEnumerable<BicycleWorldShop.Models.Category>
+    @{  
+        var brands = ViewBag.Brands;
+        var categoryName = ViewBag.CategoryName;
+    }
+
+<link rel="stylesheet" href="~/Content/SideMenu.css">
+<!---
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    -->
+<!------ Include the above in your HEAD tag ---
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    ------->
+<!----
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>  
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script> 
+---->
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+
+
+<div >
+<table class="table" align="left" > 
+
+    <tr>
+    <td align="left">
+        <div class="nav-side-menu" style="left:0" >
+            <div class="brand"><h1>Filter By: </h1></div>
+            <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
+
+            <div class="menu-list">
+
+                <ul id="menu-content" class="menu-content collapse out">
+                    <li data-toggle="collapse" data-target="#categories" class="collapsed active">
+                        <a href="#"><i class="glyphicon glyphicon-th"></i> Categories <span class="arrow"></span></a>
+                    </li>
+                    <ul class="sub-menu collapse" id="categories">
+                        @foreach (var item in Model)
+
+                        {
+
+                            //    <a href="">@Html.DisplayFor(modelItem => item.SubCategoryName)</a>
+                            //       string address = "~/StoreFront/Index/" + item.SubCategoryName.ToString();
+                            <li>
+
+                                @Html.ActionLink(item.SubCategoryName, "Index", "StoreFront", new { id = item.SubCategoryName }, null)
+                            </li>
+                        }
+
+                    </ul>
+
+                    <li data-toggle="collapse" data-target="#brands" class="collapsed active">
+                        <a href="#"><i class="fa fa-globe fa-lg"></i> Brands <span class="arrow"></span></a>
+                    </li>
+                    <ul class="sub-menu collapse" id="brands">          
+
+
+                        @foreach (var item in brands)
+                        {
+
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Brand" value=@item> @item
+                                </a>
+
+                             
+                            </li>
+
+
+                        }
+
+                    </ul>
+                    <li data-toggle="collapse" data-target="#price" class="collapsed active">
+                        <a href="#"><i class="glyphicon glyphicon-usd"></i> Price <span class="arrow"></span></a>
+                    </li>
+                    <ul class="sub-menu collapse" id="price">
+
+                        <li>
+                            <a href="LinkURL" target="_blank">
+                                <input class="klas" type="checkbox" name="Price" value="0-50"> $0 to $50
+                            </a>
+                        </li>
+                        <li>
+                            <a href="LinkURL" target="_blank">
+                                <input class="klas" type="checkbox" name="Price" value="50-100">  $50 to $100
+                            </a>
+                        </li>
+                        <li>
+                            <a href="LinkURL" target="_blank">
+                                <input class="klas" type="checkbox" name="Price" value="100-200">  $100 to $200
+                            </a>
+                        </li>
+                        <li>
+                            <a href="LinkURL" target="_blank">
+                                <input class="klas" type="checkbox" name="Price" value="200-500">  $200 to $500
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="LinkURL" target="_blank">
+                                <input class="klas" type="checkbox" name="Price" value="500-1000">  $500 to $1000
+                            </a>
+                        </li>
+                        <li>
+                            <a href="LinkURL" target="_blank">
+                                <input class="klas" type="checkbox" name="Price" value="1000-2000">  $1000 to $2000
+                            </a>
+                        </li>
+                        <li>
+                            <a href="LinkURL" target="_blank">
+                                <input class="klas" type="checkbox" name="Price" value="2000-5000">  $2000 to $5000
+                            </a>
+                        </li>
+                        <li>
+                            <a href="LinkURL" target="_blank">
+                                <input class="klas" type="checkbox" name="Price" value="5000-10000"> $5000 to $10000
+                            </a>
+                        </li>
+
+
+                    </ul>
+
+                    @if (categoryName != "Tires" && categoryName != "Car Racks")
+                    {
+                        <li data-toggle="collapse" data-target="#gender" class="collapsed active">
+                            <a href="#"><i class="glyphicon glyphicon-user"></i> Gender <span class="arrow"></span></a>
+                        </li>
+                        <ul class="sub-menu collapse" id="gender">
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Gender" value="Not Designated"> Not Designated
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Gender" value="male"> Men's
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Gender" value="female"> Women's
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Gender" value="Boys"> Boys
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Gender" value="Girls"> Girls
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Gender" value="Kids"> Kids
+                                </a>
+                            </li>
+                        </ul>
+
+
+                    }
+                    <li data-toggle="collapse" data-target="#size" class="collapsed active">
+                        <a href="#"><i class="glyphicon glyphicon-road"></i> Size <span class="arrow"></span></a>
+                    </li>
+                    <ul class="sub-menu collapse" id="size">
+
+                        @if (categoryName == "Bikes")
+                        {
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="13"> 13-inch
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="13.5"> 13.5-inch
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="14" onclick=""> 14-inch
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="14.5"> 14.5-inch
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="15"> 15-inch
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="15.5"> 15.5-inch
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="16"> 16-inch
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="16.5"> 16.5-inch
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="17"> 17-inch
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="17.5"> 17.5-inch
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="18"> 18-inch
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="18.5"> 18.5-inch
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="19"> 19-inch
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="19.5"> 19.5-inch
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="20"> 20-inch
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="21"> 21-inch
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="21.5"> 21.5-inch
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="22.5"> 22.5-inch
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="23"> 23-inch
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="25"> 25-inch
+                                </a>
+                            </li>
+                        }
+
+                        @if (categoryName == "Tires")
+                        {
+
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="26 X 1-3/8"> 26 X 1-3/8
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="26 X 1.50"> 26 X 1.50
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="26 X 1.60"> 26 X 1.60
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="26 X 1.75"> 26 X 1.75
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="26 X 2.0"> 26 X 2.0
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="26 X 2.20"> 26 X 2.20
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="26 X 2.35"> 26 X 2.35
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="27 X 1-1/4"> 27 X 1-1/4
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="27 X 1-1/8"> 27 X 1-1/8
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="27.5 X 2.0"> 27.5 X 2.0
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="27.5 X 2.20"> 27.5 X 2.20
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="27.5 X 2.35"> 27.5 X 2.35
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="29 X 2.0"> 29 X 2.0
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="29 X 2.20"> 29 X 2.20
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="29 X 2.30"> 29 X 2.30
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="29 X 2.40"> 29 X 2.40
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="650 X 23c"> 650 X 23c
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="700 X 23c"> 700 X 23c
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="700 X 25c"> 700 X 25c
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="700 X 28c"> 700 X 28c
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="700 X 32c"> 700 X 32c
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="700 X 35c"> 700 X 35c
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="700 X 38c"> 700 X 38c
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="700 X 42c"> 700 X 42c
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="700 X 45c"> 700 X 45c
+                                </a>
+                            </li>
+
+
+                        }
+
+                        @if (categoryName == "Parts")
+                        {
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="Small"> Small
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="Medium"> Medium
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="Large"> Large
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="Cruiser"> Cruiser
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="Hybrid"> Hybrid
+                                </a>
+                            </li>
+
+
+                        }
+                        @if (categoryName == "Accessories")
+                        {
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="Small"> Small
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="Large"> Large
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="10 Pack:  .30 ounce each"> 10 Pack:  .30 ounce each
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="16-ounce bottle"> 16-ounce bottle
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="32-ounce bottle"> 32-ounce bottle
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="4-ounce drip"> 4-ounce drip
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="40-serving"> 40-serving
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="6-ounce aerosol"> 6-ounce aerosol
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="8-ounce drip"> 8-ounce drip
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="8-ounce tube"> 8-ounce tube
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="9ml single use"> 9ml single use
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="9ml single use ten-pack"> 9ml single use ten-pack
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="Single Packet .30 ounce"> Single Packet .30 ounce
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="Single Serving"> Single Serving
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="Single Serving 20-pack"> Single Serving 20-pack
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="Tube: 8 ounces"> Tube: 8 ounces
+                                </a>
+                            </li>
+
+                        }
+
+                        @if (categoryName == "Clothing")
+                        {
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="X-Small"> X-Small
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="Small"> Small
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="Small/Medium"> Small/Medium
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="Medium"> Medium
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="Large"> Large
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="Large/X-Large"> Large/X-Large
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="X-Large"> X-Large
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="XX-Large"> XX-Large
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="XXX-Large"> XXX-Large
+                                </a>
+                            </li>
+
+
+
+                        }
+
+                        @if (categoryName == "Helmets")
+                        {
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="Small"> Small
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="Small/Medium"> Small/Medium
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="Medium"> Medium
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="Medium/Large"> Medium/Large
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="Large"> Large
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="One Size"> One Size
+                                </a>
+                            </li>
+
+                        }
+                        @if (categoryName == "Shoes")
+                        {
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="36"> 36
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="36.5"> 36.5
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="37"> 37
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="37.5"> 37.5
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="38"> 38
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="38.5"> 38.5
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="39"> 39
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="39.5"> 39.5
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="40"> 40
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="40.5"> 40.5
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="41"> 41
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="41.5"> 41.5
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="42"> 42
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="42.5"> 42.5
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="43"> 43
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="43.5"> 43.5
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="44"> 44
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="44.5"> 44.5
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="45"> 45
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="45.5"> 45.5
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="46"> 46
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="46.5"> 46.5
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="47"> 47
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="47.5"> 47.5
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="48"> 48
+                                </a>
+                            </li>
+
+                        }
+
+
+                        @if (categoryName == "Car Racks")
+                        {
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="15 X 100mm"> 15 X 100mm
+                                </a>
+                            </li>
+                            <li>
+                                <a href="LinkURL" target="_blank">
+                                    <input class="klas" type="checkbox" name="Size" value="15 X 110mm"> 15 X 110mm
+                                </a>
+                            </li>
+                        }
+
+                    </ul>
+
+
+                    @if (categoryName=="Bikes")
+                    {
+                    <li data-toggle="collapse" data-target="#myear" class="collapsed active">
+                        <a href="#"><i class="glyphicon glyphicon-time"></i> Model Year <span class="arrow"></span></a>
+                    </li>
+                    <ul class="sub-menu collapse" id="myear">
+                        <li>
+                            <a href="LinkURL" target="_blank">
+                                <input class="klas" type="checkbox" name="LastUpdated" value="2018"> 2018
+                            </a>
+                        </li>
+                        <li>
+                            <a href="LinkURL" target="_blank">
+                                <input class="klas" type="checkbox" name="LastUpdated" value="2017"> 2017
+                            </a>
+                        </li>
+                        <li>
+                            <a href="LinkURL" target="_blank">
+                                <input class="klas" type="checkbox" name="LastUpdated" value="2016"> 2016
+                            </a>
+                        </li>
+
+                    </ul>
+
+                    }
+
+                </ul>
+            </div>
+        </div>
+        </td>
+    </tr>
+
+</table>
+
+</div>
+    @*
+        <table class="table">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.SubCategoryName)
+                </th>
+                <th></th>
+            </tr>
+            <tr>
+
+
+                <td>
+
+                <ul >
+                    <h6 class="dropdown-header">Categories</h6>
+                    @foreach (  item in Model)
+
+                    {
+
+                      <li>  <a  class="dropdown-item" href="#">@Html.DisplayFor(modelItem => item.SubCategoryName)</a>
+
+                    </li>
+
+                    }
+                </ul>
+        </td>
+                <td>
+                <div class="dropdown-menu">
+                    <h6 class="dropdown-header">Dropdown header</h6>
+                    <a class="dropdown-item" href="#">Action</a>
+                    <a class="dropdown-item" href="#">Another action</a>
+                </div>
+        </td>
+        </tr>
+
+        @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SubCategoryName)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+                    @Html.ActionLink("Details", "Details", new { id=item.Id }) |
+                    @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+                </td>
+            </tr>
+        }
+
+        </table>
+    *@

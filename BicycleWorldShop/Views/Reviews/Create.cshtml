@@ -1,0 +1,1163 @@
+﻿@model BicycleWorldShop.Models.Review
+@using BicycleWorldShop.Models
+
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+
+   
+        var prod = ViewData["MProduct"] as Product;
+        string name = prod.Name;
+        string brand = prod.Brand;
+        string description = prod.Description;
+        string price = Convert.ToString(prod.Price);
+        string prodid = Convert.ToString(prod.Id);
+        string color = prod.Color;  
+
+}
+
+<h1><b>Write a Review</b></h1>
+<style>
+    .commentBox {
+        background-color: #efefef;
+        padding: 10px;
+        border-radius: 10px;
+    }
+
+    .starFade {
+        background-image: url('../../Content/Images/StarFade.gif');
+        min-width: 30px;
+        min-height: 30px;
+        display: inline-block;
+        cursor: pointer;
+    }
+
+    .starFadeN {
+        background-image: url('../../Content/Images/StarFade.gif');
+        min-width: 30px;
+        min-height: 30px;
+        display: inline-block;
+    }
+
+    .starGlow {
+        background-image: url('../../Content/Images/StarGlow.gif');
+        min-width: 30px;
+        min-height: 30px;
+        display: inline-block;
+        cursor: pointer;
+    }
+
+    .starGlowN {
+        background-image: url('../../Content/Images/StarGlow.gif');
+        min-width: 30px;
+        min-height: 30px;
+        display: inline-block;
+    }
+
+
+    .areaWidth {
+        width: 1000px;
+    }
+</style>
+
+<script>
+    function SubmitComment() {
+        if ($("#Rating").val() == "0") {
+            alert("Please rate this service provider.");
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+    function CRate(r) {
+        $("#Rating").val(r);
+        for (var i = 1; i <= r; i++) {
+            $("#Rate" + i).attr('class', 'starGlow');
+        }
+        // unselect remaining
+        for (var i = r + 1; i <= 5; i++) {
+            $("#Rate" + i).attr('class', 'starFade');
+        }
+    }
+
+    function CRateOver(r) {
+        for (var i = 1; i <= r; i++) {
+            $("#Rate" + i).attr('class', 'starGlow');
+        }
+    }
+
+    function CRateOut(r) {
+        for (var i = 1; i <= r; i++) {
+            $("#Rate" + i).attr('class', 'starFade');
+        }
+    }
+
+    function CRateSelected() {
+        var setRating = $("#Rating").val();
+        for (var i = 1; i <= setRating; i++) {
+            $("#Rate" + i).attr('class', 'starGlow');
+        }
+    }
+
+
+    function productRate(m, s) {
+        var zeroresult = 0;
+        var r = parseInt(m);
+        var c = parseInt(s);
+        var countMessage = "(" + s + ")";
+        if (zeroresult == r) {
+            $("#previewRating").val("Be the first to add rating to this product !!! ");
+
+        }
+        else {
+            for (var i = 1; i <= r; i++) {
+                $("#prodRate" + i).attr('class', 'starGlow');
+            }
+            // unselect remaining
+            for (var i = r + 1; i <= 5; i++) {
+                $("#prodRate" + i).attr('class', 'starFade');
+            }
+
+            $("#previewRating").text(countMessage);
+        }
+    }
+</script>
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#btnPros').click(function () {
+            addCheckbox($('#txtPros').val(), '#tblPros', 'Pros');
+            $('#txtPros').val("");
+        });
+
+        $('#btnCons').click(function () {
+            addCheckbox($('#txtCons').val(), '#tblCons', 'Cons');
+            $('#txtCons').val("");
+        });
+
+        $('#btnBU').click(function () {
+            addCheckbox($('#txtBU').val(), '#tblBestUses', 'BestUses');
+            $('#txtBU').val("");
+        });
+
+        //  $(".btn-group > .btn").click(function () {
+        ////      $(".btn-group > .btn").removeClass("active");
+        //       $(this).addClass("active");
+        //   });
+
+        /*     $('input:checkbox .Pros').change(function () {
+                 $("#Pros").val("");
+                 var temp = "";
+                 $('input:checkbox .Pros').each(function () {
+
+                     if ($(this).is(":checked")) {
+
+                         var prosThisVal = $(this).val();
+
+                        temp = temp + prosThisVal + ";";
+
+
+
+                     }
+
+
+                 });
+
+                 $("#Pros").val(temp);
+
+
+
+             });
+
+     */
+
+
+        $('.Pros').on('change', function () { // on change of state
+
+            getProsValues();
+
+
+        });
+
+        //    $('.btn btn-default').on('click', function () { // on change of state
+
+        //        getProsValues();
+
+
+        //    });
+
+
+
+    });
+
+
+    function getProsValues() {
+
+
+        $("#Pros").val("");
+        var temp = "";
+
+
+        $('.Pros').each(function () {
+
+
+            if (this.checked) // if changed state is "CHECKED"
+            {
+
+                //       var prosThisVal = $(this).val();
+
+                //      prosThisVal = document.getElementById("Pros").value + prosThisVal + ";";
+                //        $("#Pros").val(prosThisVal);
+
+                var prosThisVal = $(this).val();
+
+                temp = temp + prosThisVal + ";";
+
+
+            }
+
+        });
+
+        $("#Pros").val(temp);
+
+
+
+    }
+
+    function getConsValues() {
+
+
+        $("#Cons").val("");
+        var temp = "";
+
+
+        $('.Cons').each(function () {
+
+
+            if (this.checked) // if changed state is "CHECKED"
+            {
+
+                //       var prosThisVal = $(this).val();
+
+                //      prosThisVal = document.getElementById("Pros").value + prosThisVal + ";";
+                //        $("#Pros").val(prosThisVal);
+
+                var consThisVal = $(this).val();
+
+                temp = temp + consThisVal + ";";
+
+
+            }
+
+        });
+
+        $("#Cons").val(temp);
+
+
+
+    }
+
+    function getBestUsesValues() {
+
+
+        $("#BestUses").val("");
+        var temp = "";
+
+
+        $('.BestUses').each(function () {
+
+
+            if (this.checked) // if changed state is "CHECKED"
+            {
+
+                //       var prosThisVal = $(this).val();
+
+                //      prosThisVal = document.getElementById("Pros").value + prosThisVal + ";";
+                //        $("#Pros").val(prosThisVal);
+
+                var buThisVal = $(this).val();
+
+                temp = temp + buThisVal + ";";
+
+
+            }
+
+        });
+
+        $("#BestUses").val(temp);
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+    function addCheckbox(name, tableid, classid) {
+        //   var container = $('#cblist');
+        //      var inputs = container.find('input');
+        //     var id = inputs.length + 1;
+
+        //      $('<input />', { type: 'checkbox', id: 'cb' + id, value: name, class:"Pros", checked:false }).appendTo(container);
+        //     $('<label />', { 'for': 'cb' + id, text: name }).appendTo(container);
+
+
+
+
+
+        $(tableid)
+        .append($('<tr>')
+            .append($('<td>')
+                .append($('<div>')
+                    .attr('class', 'info-block block-info clearfix')
+                    .append($('<div>')
+                    .attr('data-toggle', 'buttons')
+                    .attr('class', 'btn-group bizmoduleselect')
+                    .attr('style', 'width:100%')
+                    .append($('<label>')
+                    .attr('class', 'btn btn-default')
+                    .attr('style', 'width:100%')
+                    .append($('<div>')
+                    .attr('class', 'bizcontent')
+                    .append($('<input>')
+                    .attr('type', 'checkbox')
+                    .attr('name', name)
+                    .attr('class', classid)
+                    .attr('value', name)
+                      .attr('style', 'width:400px')
+                      ).append($('<h5>')
+                      .text(name)))))))
+
+                      .append($('<div>').attr('width', '50%'))).attr('height', '100%');
+
+        @*
+
+
+        $("#cblist")
+              .append($('<div>')
+                  .attr('class', 'info-block block-info clearfix')
+                  .append($('<div>')
+                  .attr('data-toggle', 'buttons')
+                  .attr('class', 'btn-group bizmoduleselect')
+                  .attr('style', 'width:100%')
+                  .append($('<label>')
+                  .attr('class', 'btn btn-default')
+                  .attr('style', 'width:100%')
+                  .append($('<div>')
+                  .attr('class', 'bizcontent')
+                  .append($('<input>')
+                  .attr('type', 'checkbox')
+                  .attr('name', name)
+                  .attr('class', 'Pros')
+                  .attr('value', name)
+                    .attr('style', 'width:400px')
+                    .append($('<h5>')
+                    .text(name)))))));
+
+                 *@
+
+
+
+
+
+
+    };
+    /*
+        $(document).change(function () {
+
+            $('.Pros').on('change', function () { // on change of state
+                if (this.checked) // if changed state is "CHECKED"
+                {
+
+                    var prosThisVal = $(this).val();
+
+                    prosThisVal = document.getElementById("Pros").value + prosThisVal + ";";
+                    $("#Pros").val(prosThisVal);
+
+
+                }
+            });
+
+
+
+
+
+        });
+
+
+       */
+
+
+
+    function ModifyCheckBoxes(Id) {
+
+        $("#DescribeYourself").val(Id);
+        document.getElementById("dyspan").innerHTML = Id;
+        document.getElementById("clearDY").style.visibility = "visible";
+    };
+
+    function ClearDY() {
+        $("#DescribeYourself").val("0");
+        document.getElementById("dyspan").innerHTML = "";
+
+        document.getElementById("clearDY").style.visibility = "hidden";
+    };
+
+    function SelectCyclingStyle(Id) {
+        $("#CyclingStyle").val(Id);
+        document.getElementById("csspan").innerHTML = Id;
+        document.getElementById("clearCS").style.visibility = "visible";
+
+
+    };
+
+    function ClearCS() {
+        $("#CyclingStyle").val("0");
+        document.getElementById("csspan").innerHTML = "";
+
+        document.getElementById("clearCS").style.visibility = "hidden";
+    };
+
+    function ChooseGift(Id) {
+        $("#Gift").val(Id);
+        document.getElementById("giftspan").innerHTML = Id;
+        document.getElementById("clearGift").style.visibility = "visible";
+
+    };
+    function ClearGift() {
+        $("#Gift").val("0");
+        document.getElementById("giftspan").innerHTML = "";
+        document.getElementById("clearGift").style.visibility = "hidden";
+    };
+
+    function BLine(Id) {
+        $("#BottomLine").val(Id);
+        document.getElementById("blspan").innerHTML = Id;
+        document.getElementById("clearBL").style.visibility = "visible";
+
+    };
+    function ClearBL() {
+        $("#BottomLine").val("0");
+        document.getElementById("blspan").innerHTML = "";
+        document.getElementById("clearBL").style.visibility = "hidden";
+    };
+
+
+
+    function GetValues() {
+
+        getProsValues();
+        getConsValues();
+        getBestUsesValues();
+
+        var url = window.location.href;
+        var pieces = url.split("/")
+        $('#ProductId').val(pieces[pieces.length - 1]);
+        //current date setting
+        var todayDate = new Date();
+        var getTodayDate = todayDate.getDate();
+        var getTodayMonth = todayDate.getMonth() + 1;
+        var getTodayFullYear = todayDate.getFullYear();
+        var getCurrentHours = todayDate.getHours();
+        var getCurrentMinutes = todayDate.getMinutes();
+        var getCurrentSeconds = todayDate.getSeconds();
+        var getCurrentAmPm = getCurrentHours >= 12 ? 'PM' : 'AM';
+        getCurrentHours = getCurrentHours % 12;
+        getCurrentHours = getCurrentHours ? getCurrentHours : 12;
+        getCurrentMinutes = getCurrentMinutes < 10 ? '0' + getCurrentMinutes : getCurrentMinutes;
+        getCurrentSeconds = getCurrentSeconds < 10 ? '0' + getCurrentSeconds : getCurrentSeconds;
+        var getCurrentDateTime = getTodayMonth + '/' + getTodayDate + '/' + getTodayFullYear + ' ' + getCurrentHours + ':' + getCurrentMinutes + ':' + getCurrentSeconds + ' ' + getCurrentAmPm;
+
+
+    //    document.getElementById("DatePosted").value = getCurrentDateTime;
+
+    };
+
+
+</script>
+
+
+
+
+
+
+
+@using (Html.BeginForm())
+{
+
+    
+    var category = (Category)ViewData["MyCategory"];
+   
+    int ratingProduct = (int)ViewBag.Rating;
+    int numReviews = (int)ViewBag.NumReviews;
+
+
+    if (color.Equals("no"))
+    {
+        name = name + ".jpg";
+
+
+    }
+    else
+    {
+        name = name + "_" + color + ".jpg";
+
+
+    }
+    <div class="row">
+
+
+        <table width="100%">
+
+            <tr>
+                <a href="@Url.Action("Catalog", "Home")"> BicycleCatalog </a> >
+                <a href="~/StoreFront/Index/@category.SubCategoryName">
+                    @category.Name > @category.SubCategoryName
+
+
+
+                </a> >
+                <a href="~/Products/Preview/@prod.Name">  @prod.Name </a> > Create New Review
+            </tr>
+        </table>
+
+        <br />
+        <br />
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-3">
+
+            <div>
+                <a id="imglink" href="~/Content/Images/Products/@name" title=@name>
+                    <img id="mainimg" src="~/Content/Images/Products/@name" title=@name width="250" height="250">
+                </a>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <a href="~/Products/Preview/@prod.Name">
+                <div>
+
+                    <h3>@brand</h3>
+
+
+                </div>
+
+                <div>
+
+                    <h4>@prod.Name</h4>
+
+
+                </div>
+            </a>
+            <div>
+
+
+                <h4> <b>$ @price </b></h4>
+
+
+            </div>
+            <div>
+
+                @if (numReviews > 0)
+                {
+                    <span id="prodRate1"></span><span id="prodRate2"></span><span id="prodRate3"></span><span id="prodRate4"></span><span id="prodRate5"></span>
+                }
+
+                <a href="~/Products/Preview/@prod.Name">  <label id="previewRating"></label></a>
+            </div>
+
+            <script> productRate('@ratingProduct', '@numReviews') </script>
+
+
+            <div>
+
+
+                <span> @description</span>
+
+
+            </div>
+        </div>
+
+    </div>
+
+
+
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+
+
+
+            @Html.HiddenFor(model => model.ProductId, new { id = "ProductId" })
+            <div class="form-group">
+                @Html.LabelFor(model => model.Headline, htmlAttributes: new { @class = "control-label col-md-2" }) <b style="color:red"> * </b>
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Headline, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Headline, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+
+
+                @Html.Label("Your rating", htmlAttributes: new { @class = "control-label col-md-2" }) <b style="color:red"> * </b>      <span style="font-weight:normal;">(1 start is bad, 5 star is good)</span>
+
+
+                <div onmouseout="CRateSelected()">
+                    <span class="starFade" id="Rate1" onclick="CRate(1)" onmouseover="CRateOver(1)" onmouseout="CRateOut(1)"></span><span class="starFade" id="Rate2" onclick="CRate(2)" onmouseover="CRateOver(2)" onmouseout="CRateOut(2)"></span><span class="starFade" id="Rate3" onclick="CRate(3)" onmouseover="CRateOver(3)" onmouseout="CRateOut(3)"></span><span class="starFade" id="Rate4" onclick="CRate(4)" onmouseover="CRateOver(4)" onmouseout="CRateOut(4)"></span><span class="starFade" id="Rate5" onclick="CRate(5)" onmouseover="CRateOver(5)" onmouseout="CRateOut(5)"></span>
+                </div>
+
+
+
+                <div class="col-md-10">
+
+                    @Html.HiddenFor(model => model.Rating, new { id = "Rating", value = "0" })
+
+                    @Html.ValidationMessageFor(model => model.Rating, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Pros, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <div id="cblist">
+                        <table id="tblPros" style="height:auto">
+                            <tr>
+                                <td width="50%"> Select all that apply</td>
+                                <td width="50%"></td>
+                            </tr>
+                            <tr>
+                                <td width="50%">
+
+                                    <div class="info-block block-info clearfix">
+                                        <div data-toggle="buttons" class="btn-group bizmoduleselect" style="width:100%">
+                                            <label class="btn btn-default" style="width:100%">
+                                                <div class="bizcontent">
+                                                    <input type="checkbox" name="Durable" class="Pros" value="Durable">
+                                                    <h5>Durable</h5>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td width="50%">
+
+                                    <div class="info-block block-info clearfix">
+                                        <div data-toggle="buttons" class="btn-group bizmoduleselect" style="width:100%">
+                                            <label class="btn btn-default" style="width:100%">
+                                                <div class="bizcontent">
+                                                    <input type="checkbox" name="Versatile" class="Pros" value="Versatile">
+                                                    <h5>Versatile</h5>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td width="400px">
+
+                                    <div class="info-block block-info clearfix">
+                                        <div data-toggle="buttons" class="btn-group bizmoduleselect" style="width:100%">
+                                            <label class="btn btn-default" style="width:100%">
+                                                <div class="bizcontent">
+                                                    <input type="checkbox" name="Lightweight" class="Pros" value="Lightweight" style="width:400px">
+                                                    <h5>Lightweight</h5>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                </td>
+                                <td width="50%"></td>
+
+                            </tr>
+
+                        </table>
+                    </div>
+                    <input type="text" id="txtPros" />
+                    <input type="button" value="Add your Own +" id="btnPros" />
+                    @Html.HiddenFor(model => model.Pros, new { id = "Pros", value = "0" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @*     @Html.LabelFor(model => model.Cons, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Cons, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Cons, "", new { @class = "text-danger" })
+                    </div>
+                *@
+
+                @Html.LabelFor(model => model.Cons, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <div id="conslist">
+                        <table id="tblCons" style="height:auto">
+                            <tr>
+                                <td width="50%"> Select all that apply</td>
+                                <td width="50%"></td>
+                            </tr>
+                            <tr>
+                                <td width="50%">
+
+                                    <div class="info-block block-info clearfix">
+                                        <div data-toggle="buttons" class="btn-group bizmoduleselect" style="width:100%">
+                                            <label class="btn btn-default" style="width:100%">
+                                                <div class="bizcontent">
+                                                    <input type="checkbox" name="Heavy" class="Cons" value="Heavy">
+                                                    <h5>Heavy</h5>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td width="50%">
+
+                                    <div class="info-block block-info clearfix">
+                                        <div data-toggle="buttons" class="btn-group bizmoduleselect" style="width:100%">
+                                            <label class="btn btn-default" style="width:100%">
+                                                <div class="bizcontent">
+                                                    <input type="checkbox" name="Poor Construction" class="Cons" value="Poor Construction">
+                                                    <h5>Poor Construction</h5>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td width="400px">
+
+                                    <div class="info-block block-info clearfix">
+                                        <div data-toggle="buttons" class="btn-group bizmoduleselect" style="width:100%">
+                                            <label class="btn btn-default" style="width:100%">
+                                                <div class="bizcontent">
+                                                    <input type="checkbox" name="Wears Out Quickly" class="Cons" value="Wears Out Quickly" style="width:400px">
+                                                    <h5>Wears Out Quickly</h5>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                </td>
+                                <td width="50%"></td>
+
+                            </tr>
+
+                        </table>
+                    </div>
+                    <input type="text" id="txtCons" />
+                    <input type="button" value="Add your Own +" id="btnCons" />
+                    @Html.HiddenFor(model => model.Cons, new { id = "Cons", value = "0" })
+                </div>
+
+
+
+            </div>
+
+            <div class="form-group">
+                @*    @Html.LabelFor(model => model.BestUses, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.BestUses, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.BestUses, "", new { @class = "text-danger" })
+                    </div>
+                *@
+
+                @Html.LabelFor(model => model.BestUses, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <div id="bestuseslist">
+                        <table id="tblBestUses" style="height:auto">
+                            <tr>
+                                <td width="50%"> Select all that apply</td>
+                                <td width="50%"></td>
+                            </tr>
+                            <tr>
+                                <td width="50%">
+
+                                    <div class="info-block block-info clearfix">
+                                        <div data-toggle="buttons" class="btn-group bizmoduleselect" style="width:100%">
+                                            <label class="btn btn-default" style="width:100%">
+                                                <div class="bizcontent">
+                                                    <input type="checkbox" name="Commuting/City" class="BestUses" value="Commuting/City">
+                                                    <h5>Commuting/City</h5>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td width="50%">
+
+                                    <div class="info-block block-info clearfix">
+                                        <div data-toggle="buttons" class="btn-group bizmoduleselect" style="width:100%">
+                                            <label class="btn btn-default" style="width:100%">
+                                                <div class="bizcontent">
+                                                    <input type="checkbox" name="Extreme Sports" class="BestUses" value="Extreme Sports">
+                                                    <h5>Extreme Sports</h5>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td width="400px">
+
+                                    <div class="info-block block-info clearfix">
+                                        <div data-toggle="buttons" class="btn-group bizmoduleselect" style="width:100%">
+                                            <label class="btn btn-default" style="width:100%">
+                                                <div class="bizcontent">
+                                                    <input type="checkbox" name="Mountain Biking" class="BestUses" value="Mountain Biking" style="width:400px">
+                                                    <h5>Mountain Biking</h5>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                </td>
+                                <td width="50%">
+
+                                    <div class="info-block block-info clearfix">
+                                        <div data-toggle="buttons" class="btn-group bizmoduleselect" style="width:100%">
+                                            <label class="btn btn-default" style="width:100%">
+                                                <div class="bizcontent">
+                                                    <input type="checkbox" name="Road Biking" class="BestUses" value="Road Biking" style="width:400px">
+                                                    <h5>Road Biking</h5>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                        </table>
+                    </div>
+                    <input type="text" id="txtBU" />
+                    <input type="button" value="Add your Own +" id="btnBU" />
+                    @Html.HiddenFor(model => model.BestUses, new { id = "BestUses", value = "0" })
+                </div>
+
+
+
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.DescribeYourself, htmlAttributes: new { @class = "control-label col-md-2" })
+                @*  <div class="col-md-10">
+                            @Html.EditorFor(model => model.DescribeYourself, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.DescribeYourself, "", new { @class = "text-danger" })
+                        </div>
+                    //
+                *@
+
+                <div class="col-md-10">
+                    <h3> <span id="dyspan"></span> </h3>
+                    <table id="tblDescribeYourself" style="width:100%">
+                        <tr>
+                            <td width="100%" align="left"> Select one</td>
+
+                        </tr>
+                        <div class="btn-group-vertical btn-group-toggle" data-toggle="buttons" role="group" aria-label="Vertical button group">
+                            <tr>
+                                <td width="100%" align="left">
+
+                                    <button type="button" class="btn btn-default" style="width:100%" id="Casual/Recreational" onclick="ModifyCheckBoxes('Casual/Recreational')"><h5>Casual/Recreational</h5></button>
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="100%" align="left">
+
+                                    <button type="button" class="btn btn-default" style="width:100%" id="Commuter" onclick="ModifyCheckBoxes('Commuter')"><h5>Commuter</h5></button>
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="100%" align="left">
+                                    <button type="button" class="btn btn-default" style="width:100%" id="Bike Messenger" onclick="ModifyCheckBoxes('Bike Messenger')"><h5>Bike Messenger</h5></button>
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="100%" align="left">
+                                    <button type="button" class="btn btn-default" style="width:100%" id="Avid Cyclist" onclick="ModifyCheckBoxes('Avid Cyclist')"><h5>Avid Cyclist</h5></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="100%" align="left">
+                                    <button type="button" class="btn btn-default" style="width:100%" id="Competitive Cyclist" onclick="ModifyCheckBoxes('Competitive Cyclist')"><h5>Competitive Cyclist</h5></button>
+                                </td>
+                            </tr>
+
+                        </div>
+                    </table>
+
+
+                    <button id="clearDY" style="visibility:hidden" onclick="ClearDY();return false">Clear Selection</button>
+
+                </div>
+
+
+
+                @Html.HiddenFor(model => model.DescribeYourself, new { id = "DescribeYourself", value = "0" })
+
+
+
+            </div>
+
+            @*
+                    <div class="form-group">
+
+                        @Html.LabelFor(model => model.DescribeYourself, htmlAttributes: new { @class = "control-label col-md-2" })
+
+                       <div class="pr-helper-text">Select one</div>
+                        <div role="radiogroup" aria-labelledby="pr-describeyourself" class="btn-group btn-toggle btn-group-5-count btn-group-radio-vertical">
+                            <div role="radio" aria-invalid="false" aria-required="false" class="pr-btn pr-btn-default" tabindex="0" aria-label="Casual/ Recreational" aria-checked="false">Casual/ Recreational</div>
+                            <div role="radio" aria-invalid="false" aria-required="false" class="pr-btn pr-btn-default active" tabindex="0" aria-label="Commuter" aria-checked="true">Commuter</div>
+                            <div role="radio" aria-invalid="false" aria-required="false" class="pr-btn pr-btn-default" tabindex="0" aria-label="Bike Messenger" aria-checked="false">Bike Messenger</div>
+                            <div role="radio" aria-invalid="false" aria-required="false" class="pr-btn pr-btn-default" tabindex="0" aria-label="Avid Cyclist" aria-checked="false">Avid Cyclist</div>
+                            <div role="radio" aria-invalid="false" aria-required="false" class="pr-btn pr-btn-default" tabindex="0" aria-label="Competitive Cyclist" aria-checked="false">Competitive Cyclist</div>
+                        </div><button class="pr-clear-all-radios">Clear Selection</button>
+
+
+                </div>
+
+            *@
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.CyclingStyle, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @* @Html.EditorFor(model => model.CyclingStyle, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.CyclingStyle, "", new { @class = "text-danger" })
+                    *@
+
+
+                    <div class="col-md-10">
+                        <h3> <span id="csspan"></span> </h3>
+                        <table id="tblDescribeYourself" style="width:100%">
+                            <tr>
+                                <td width="100%" align="left"> Select one</td>
+
+                            </tr>
+                            <div class="btn-group-vertical btn-group-toggle" data-toggle="buttons" role="group" aria-label="Vertical button group">
+                                <tr>
+                                    <td width="100%" align="left">
+
+                                        <button type="button" class="btn btn-default" style="width:100%" id="Comfort Oriented" onclick="SelectCyclingStyle('Comfort Oriented')"><h5>Comfort Oriented</h5></button>
+
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="100%" align="left">
+
+                                        <button type="button" class="btn btn-default" style="width:100%" id="Speed Oriented" onclick="SelectCyclingStyle('Speed Oriented')"><h5>Speed Oriented</h5></button>
+
+                                    </td>
+                                </tr>
+
+                            </div>
+                        </table>
+
+
+                        <button id="clearCS" style="visibility:hidden" onclick="ClearCS();return false">Clear Selection</button>
+
+                    </div>
+
+
+
+                    @Html.HiddenFor(model => model.CyclingStyle, new { id = "CyclingStyle", value = "0" })
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.Label("Was this a gift?", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @*  @Html.EditorFor(model => model.Gift, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Gift, "", new { @class = "text-danger" })
+                    *@
+
+
+                    <h3> <span id="giftspan"></span> </h3>
+                    <table id="tblGift" style="width:100%">
+                        <tr>
+                            <td width="100%" align="left"> Select one</td>
+
+                        </tr>
+                        <div class="btn-group-vertical btn-group-toggle" data-toggle="buttons" role="group" aria-label="Vertical button group">
+                            <tr>
+                                <td width="100%" align="left">
+
+                                    <button type="button" class="btn btn-default" style="width:100%" id="Yes" onclick="ChooseGift('Yes')"><h5>Yes</h5></button>
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="100%" align="left">
+
+                                    <button type="button" class="btn btn-default" style="width:100%" id="No" onclick="ChooseGift('No')"><h5>No</h5></button>
+
+                                </td>
+                            </tr>
+
+                        </div>
+                    </table>
+
+
+                    <button id="clearGift" style="visibility:hidden" onclick="ClearGift();return false">Clear Selection</button>
+
+
+                    @Html.HiddenFor(model => model.Gift, new { id = "Gift", value = "0" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Comments, htmlAttributes: new { @class = "control-label col-md-2" }) <b style="color:red"> * </b>
+                <div class="col-md-10">
+                    <table id="tblComments" width="900">
+                        <tr style="width:100%">
+                            <td width="100%">
+                                @Html.TextAreaFor(m => m.Comments, new { @class = "form-control areaWidth" })
+                            </td>
+                        </tr>
+                        <tr>
+                            <td width="100%">
+                                @Html.ValidationMessageFor(model => model.Comments, "", new { @class = "text-danger" })
+
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.BottomLine, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @*  @Html.EditorFor(model => model.BottomLine, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.BottomLine, "", new { @class = "text-danger" })
+                    *@
+
+                    <h3> <span id="blspan"></span> </h3>
+                    <table id="tblBottomLine" style="width:100%">
+                        <tr>
+                            <td width="100%" align="left"> Select one</td>
+
+                        </tr>
+                        <div class="btn-group-vertical btn-group-toggle" data-toggle="buttons" role="group" aria-label="Vertical button group">
+                            <tr>
+                                <td width="100%" align="left">
+
+                                    <button type="button" class="btn btn-default" style="width:100%" id="blYes" onclick="BLine('Yes')"><h5>Yes, I would recommend this to a friend</h5></button>
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="100%" align="left">
+
+                                    <button type="button" class="btn btn-default" style="width:100%" id="blNo" onclick="BLine('No')"><h5>No, I would not recommend this to a friend</h5></button>
+
+                                </td>
+                            </tr>
+
+                        </div>
+                    </table>
+
+
+                    <button id="clearBL" style="visibility:hidden" onclick="ClearBL();return false">Clear Selection</button>
+
+
+                    @Html.HiddenFor(model => model.BottomLine, new { id = "BottomLine", value = "0" })
+
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Nickname, htmlAttributes: new { @class = "control-label col-md-2" }) <b style="color:red"> * </b>
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Nickname, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Nickname, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.Label("Your Location", htmlAttributes: new { @class = "control-label col-md-2" }) <b style="color:red"> * </b>
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Location, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Location, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+
+
+            @{
+                //   var userDt = DateTime.Now.ToString("MM/dd/yyyy hh:mm:ss tt");
+                //  DateTime dtByUser = DateTime.Parse(userDt).Date;
+                       
+                string format = "yyyy/MM/dd HH:mm:ss";
+           
+            }
+
+        @*   @Html.HiddenFor(model => model.DatePosted, new { id = "DatePosted", value=time })
+        *@ 
+
+            <div class="form-group">
+                @Html.LabelFor(vm => vm.DatePosted, htmlAttributes: new { @class = "control-label col-md-2" })
+
+                <div class="col-md-10">
+
+                    @Html.TextBoxFor(model => model.DatePosted, new { Value = System.DateTime.Now.ToString(format), @readonly = "readonly", htmlAttributes = new { @class = "form-control" } })
+
+                </div>
+            </div>
+
+
+
+
+
+
+            <h6>By submitting, you represent that you have read and agree to our Terms and our Privacy Policy</h6>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Create" class="btn btn-primary" onclick="GetValues()" />
+                </div>
+            </div>
+        </div>
+                }
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+<script type="text/javascript">
+
+
+</script>

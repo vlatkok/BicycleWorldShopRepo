@@ -1,0 +1,378 @@
+﻿
+
+@using PagedList;
+
+@using PagedList.Mvc;
+
+@model IPagedList<BicycleWorldShop.Models.Review>
+
+
+@{
+
+    var numReviews = Model.Count();
+
+
+}
+<script>
+
+    function reviewsRates(m, s) {
+
+        var r = parseInt(m);
+        var c = parseInt(s);
+
+
+        for (var i = 1; i <= r; i++) {
+            $("#" + c + i).attr('class', 'starGlow');
+        }
+        // unselect remaining
+        for (var i = r + 1; i <= 5; i++) {
+            $("#" + c + i).attr('class', 'starFade');
+        }
+
+
+
+    }
+
+
+    $(function () {
+        $('#myPager').on('click', 'a', function () {
+            $.ajax({
+                url: this.href,
+                type: 'GET',
+                cache: false,
+                success: function (result) {
+                    $('#some_grid_container').html(result);
+                }
+            });
+            return false;
+        });
+
+     @*  $("#datesorder").change(function () {
+            $.ajax({
+                url: this.href,
+                type: 'GET',
+                cache: false,
+                success: function (result) {
+                    $('#some_grid_container').empty();
+                    $('#some_grid_container').html(result);
+                }
+            });
+            return false;
+        });
+         *@
+        $('input[type=radio][id=datesorder]').change(function () {
+            var url = "/Products/PreviewReviews/";
+            var order= $("input[id=datesorder]:checked").val();
+            var startpage=parseInt("1");
+            var prid='@ViewBag.productid';
+           
+            $.ajax({
+                url: url,
+                data: { id: prid, pagenumber: startpage, datesorder: order },
+                type: 'GET',
+                cache: false,
+                success: function (result) {
+                    $('#some_grid_container').empty();
+                    $('#some_grid_container').html(result);
+                }
+            });
+            return false;
+        });
+
+
+    });
+
+</script>
+
+@using (Html.BeginForm("PreviewReviews", "Products", FormMethod.Get))
+{
+    if (numReviews > 0)
+    {
+
+        @*  <div class="row" style="background-color: lightgray">
+            <h5>  &nbsp;&nbsp; Displaying reviews <b>1-@numReviews </b></h5>
+
+
+                            </div>
+
+        *@
+List<SelectListItem> dateorderlist = new List<SelectListItem>()
+            {
+                new SelectListItem
+                {
+                    Value = "Newest",
+                    Text = "Newest"
+                },
+                  new SelectListItem
+                {
+                    Value = "Oldest",
+                    Text = "Oldest"
+                },
+                    new SelectListItem
+                {
+                    Value = "Highest rating",
+                    Text = "Highest rating"
+                },
+                      new SelectListItem
+                {
+                    Value = "Lowest rating",
+                    Text = "Lowest rating"
+                },
+                          new SelectListItem
+                {
+                    Value = "Most Helpful",
+                    Text = "Most Helpful"
+                },
+                              new SelectListItem
+                {
+                    Value = "Least helpful",
+                    Text = "Least helpful"
+                }
+            };
+
+        <div id="some_grid_container">
+            <div class="row" style="background-color: lightgray">
+                <!-- <div style="float:right">
+                     <h5> <b>Sort by </b></h5> @Html.DropDownList("datesorder", dateorderlist,new { onchange="this.form.submit();"})
+                 </div>
+                 -->
+
+                <b> Sort By: </b>@Html.RadioButton("datesorder", "Newest") <text>Newest</text> @Html.RadioButton("datesorder", "Oldest") <text>Oldest</text>
+                @Html.RadioButton("datesorder", "Highest rating")<text>Highest rating</text> @Html.RadioButton("datesorder", "Lowest rating")<text>Lowest rating</text>
+                @Html.RadioButton("datesorder", "Most Helpful")<text>Most Helpful</text>
+                @Html.RadioButton("datesorder", "Least Helpful")<text>Least Helpful</text>
+             
+                
+
+            </div>
+            <br />
+            <br />
+
+
+            @foreach (var review in Model)
+                    {
+                <div class="row">
+
+
+
+                    <div class="col-md-4">
+                        <table>
+
+                            <tr>
+                                <td>
+                                    By  <b>@review.Nickname </b> from <b>@review.Location </b>
+
+                                </td>
+                            </tr>
+                            <br />
+                            <br />
+                            <tr>
+                                <td>
+                                    <b> @review.CyclingStyle ,  @review.DescribeYourself </b> - Bicycle rider
+
+
+                                </td>
+                            </tr>
+
+
+                        </table>
+                    </div>
+
+                    <div class="col-md-8" valign="top" align="left">
+
+                        <div>
+                            @review.DatePosted
+
+                        </div>
+                        <div>
+
+                            <div style="align-items:center;display:inline-flex">
+
+                                @for (int i = 1; i <= 5; i++)
+
+                        {
+                            string poma = review.Id.ToString() + i;
+                                    <span id=@poma></span>
+                                }
+
+                                &nbsp;  &nbsp; <h5> <b> @review.Rating </b> </h5>
+                            </div>
+
+                            <script> reviewsRates('@review.Rating', '@review.Id') </script>
+
+
+                        </div>
+                        <div>
+
+                            <h2> <b> @review.Headline</b></h2>
+
+                        </div>
+
+                        <div>
+                            @if (!review.Pros.IsEmpty())
+                        {  <div style="align-items:center;display:inline-flex">
+                                <div style="background-color:lightgreen; width:100px; align-items:center">
+                                    <b style="color:green">  &nbsp; &nbsp; &nbsp; &nbsp;Pros</b>
+
+                                </div>
+                                &nbsp;  &nbsp;
+                                <div>
+
+                                    @{
+                                        string a = review.Pros;
+                                        a = a.Trim();
+                                        string[] s = a.Split(';');
+                                        string previewString = "";
+
+
+                                        for (int i = 0; i < s.Length; i++)
+                                        {
+                                            if (!s[i].IsEmpty())
+                                            {
+                                                if (s[i] == s[s.Length - 2] || (s.Length == 2))
+                                                {
+                                                    previewString = previewString + " + " + s[i];
+                                                }
+
+                                                else
+                                                {
+                                                    previewString = previewString + " + " + s[i] + ",";
+                                                }
+                                            }
+                                        }
+                                    }
+
+
+
+                                    @previewString
+
+                                </div>
+                            </div>
+                            <br />
+                                        }
+                        </div>
+
+                        <div>
+                            @if (!review.Cons.IsEmpty())
+                        { <div style="align-items:center;display:inline-flex">
+                                <div style="background-color:palevioletred; width:100px; align-items:center">
+                                    <b style="color:darkred">  &nbsp; &nbsp; &nbsp; &nbsp;Cons</b>
+
+                                </div>
+                                &nbsp;  &nbsp;
+                                <div>
+                                    @{
+                                        string a = review.Cons;
+                                        a = a.Trim();
+                                        string[] s = a.Split(';');
+                                        string previewString = "";
+
+
+                                        for (int i = 0; i < s.Length; i++)
+                                        {
+                                            if (!s[i].IsEmpty())
+                                            {
+                                                if (s[i] == s[s.Length - 2] || (s.Length == 2))
+                                                {
+                                                    previewString = previewString + " - " + s[i];
+                                                }
+
+                                                else
+                                                {
+                                                    previewString = previewString + " - " + s[i] + ",";
+                                                }
+                                            }
+                                        }
+
+                                    }
+                                    @previewString
+
+                                </div>
+                            </div>
+                                        }
+                            <br />
+                        </div>
+                        <div>
+                            @if (!review.BestUses.IsEmpty())
+                        {
+                                <div style="align-items:center;display:inline-flex">
+                                    <div style="background-color:cornflowerblue; width:100px; align-items:center">
+                                        <b style="color:blue">  &nbsp; &nbsp; Best Uses</b>
+
+                                    </div>
+                                    &nbsp;  &nbsp;
+                                    <div>
+
+                                        @{
+                                            string a = review.BestUses;
+                                            a = a.Trim();
+                                            string[] s = a.Split(';');
+                                            string previewString = "";
+
+
+                                            for (int i = 0; i < s.Length; i++)
+                                            {
+                                                if (!s[i].IsEmpty())
+                                                {
+                                                    if (s[i] == s[s.Length - 2] || (s.Length == 2))
+                                                    {
+                                                        previewString = previewString + " · " + s[i];
+                                                    }
+
+                                                    else
+                                                    {
+                                                        previewString = previewString + " · " + s[i] + ",";
+                                                    }
+                                                }
+                                            }
+
+                                        }
+                                        @previewString
+
+                                    </div>
+                                    <br />
+                                </div>
+                                            }
+                        </div>
+                        <br />
+
+                        <div style="width:100%">
+
+                            @review.Comments
+
+                        </div>
+
+
+                    </div>
+
+
+
+
+
+
+
+                </div>
+                <hr />
+
+                                            }
+
+
+            @* <div class="row" style="background-color: lightgray">
+                    <h5>  &nbsp;&nbsp; Displaying reviews <b>1-@numReviews </b></h5>
+                </div>
+            *@
+            <div id="myPager">
+                @Html.PagedListPager(Model, pageNumber => Url.Action("PreviewReviews", new
+           {
+               id = Convert.ToInt16(ViewBag.productid),
+               pageNumber,
+               datesorder=  ViewBag.datesorder
+
+
+           }))
+            </div>
+        </div>
+
+                                                }
+
+                                            }

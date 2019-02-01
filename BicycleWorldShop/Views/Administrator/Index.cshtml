@@ -1,0 +1,26 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Administrator Module</h2>
+
+<table>
+    <tr>
+      <td>  @Html.ActionLink("Go to Products >>>", "Index", "Products", null, new { @class = "btn btn-primary btn-lg " })
+</td>
+        </tr>
+    <tr>
+        <td>
+
+            @Html.ActionLink("Go to Reviews >>>", "Index", "Reviews", null, new { @class = "btn btn-primary btn-lg " })
+            </td>
+        </tr>
+    <tr>
+        <td>@Html.ActionLink("Go to Categories >>>", "Index", "Categories", null, new { @class = "btn btn-primary btn-lg " })
+            </td>
+        </tr>
+   
+
+    </table>

@@ -1,0 +1,1305 @@
+﻿@model IEnumerable<BicycleWorldShop.Models.Product>
+@using BicycleWorldShop.Models
+@{
+    ViewBag.Title = "Preview";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string selectedColor = "";
+    string selectedSize = "";
+    int ratingProduct = (int)ViewBag.Rating;
+    int numReviews = (int)ViewBag.NumReviews;
+    var reviewList = ViewData["Reviews"] as IEnumerable<Review>;
+}
+
+<h2>Preview</h2>
+
+
+
+<style>
+    #imgname1 {
+        display: none;
+    }
+
+    .commentBox {
+        background-color: #efefef;
+        padding: 10px;
+        border-radius: 10px;
+    }
+
+    .starFade {
+        background-image: url('../../Content/Images/StarFade.gif');
+        min-width: 30px;
+        min-height: 30px;
+        display: inline-block;
+        cursor: pointer;
+    }
+
+    .starFadeN {
+        background-image: url('../../Content/Images/StarFade.gif');
+        min-width: 30px;
+        min-height: 30px;
+        display: inline-block;
+    }
+
+    .starGlow {
+        background-image: url('../../Content/Images/StarGlow.gif');
+        min-width: 30px;
+        min-height: 30px;
+        display: inline-block;
+        cursor: pointer;
+    }
+
+    .starGlowN {
+        background-image: url('../../Content/Images/StarGlow.gif');
+        min-width: 30px;
+        min-height: 30px;
+        display: inline-block;
+    }
+
+
+    .areaWidth {
+        width: 1000px;
+    }
+</style>
+
+<link rel="stylesheet" type="text/css" href="~/Content/JQZoom/css/jqzoom.css" />
+<script type="text/javascript" src="~/Content/JQZoom/js/jquery.js"></script>
+<script type="text/javascript" src="~/Content/JQZoom/js/jquery.jqzoom.js"></script>
+
+<script type="text/javascript">
+    function displayName(a) {
+
+        document.getElementById("cname").innerHTML = a;
+    }
+</script>
+
+@*
+    <script language="javascript" type="text/javascript">
+        function Set(a) {
+
+
+
+            a=a+".jpg";
+            console.log(a);
+            document.getElementById("mainimg").src= "~/Content/Images/Products/"+a;
+
+
+           document.getElementById("maina").href="~/Content/Images/Products/@picturename";
+        }
+
+        function SetS(a) {
+
+            @selectedSize = a;
+        }
+
+     </script>
+*@
+
+<script language="javascript" type="text/javascript">
+    function Availability() {
+
+        var color1 = document.getElementById("colorDropDown").value;
+        var size1 = document.getElementById("sizeDropDown").value;
+        var name1 = document.getElementById("name").innerText;
+
+
+        var procesmessage = "Searching in database...Please wait...";
+        $("#message").html(procesmessage).show();
+        var url = "/Products/Availability/";
+
+        $.ajax({
+            url: url,
+            data: { color: color1, size: size1, name: name1 },
+            cache: false,
+            type: "POST",
+            success: function (data) {
+                var mtext = "";
+                //        var markup = "";
+                //    for (var x = 0; x < data.length; x++) {
+                mtext = data.available;
+                //   }
+                $("#message").html(mtext).show();
+                //   $("#ddlsubcategory").html(markup).show();
+                if (mtext == "In Stock" || mtext == "In Warehouse") {           
+
+                //    var element1 = document.getElementById("dynaddtocart");
+                  //  element1.parentNode.removeChild(element1);
+                  
+                    if ($("#dynaddtocart").length) {
+                        $("#dynaddtocart").remove();
+                    };
+
+
+                    var htmlContent1 = '<a href="/ShoppingCart/AddToCart/' + data.pid + '/" class="btn btn-info" id="dynaddtocart">Add to Cart</a>';
+                    var add=document.getElementById("addtocart");
+                    
+
+
+
+                    var enlaceElement = document.createElement('a');
+                    enlaceElement.innerHTML = htmlContent1;
+                    add.appendChild(enlaceElement);
+                  //  $("#addtocart") htmlContent1;
+                    $("#addtocart").show();
+                }
+                else {
+                    $("#addtocart").hide();
+                }
+
+            },
+            error: function (reponse) {
+                alert("error : " + reponse);
+            }
+        });
+
+    }
+</script>
+
+<script type="text/javascript">
+
+    function productRate(m, s) {
+        var zeroresult = 0;
+        var r = parseInt(m);
+        var c = parseInt(s);
+        var countMessage = "(" + s + ")";
+        if (zeroresult == r) {
+            $("#previewRating").val("Be the first to add rating to this product !!! ");
+
+        }
+        else {
+            for (var i = 1; i <= r; i++) {
+                $("#prodRate" + i).attr('class', 'starGlow');
+            }
+            // unselect remaining
+            for (var i = r + 1; i <= 5; i++) {
+                $("#prodRate" + i).attr('class', 'starFade');
+            }
+
+            $("#previewRating").text(countMessage);
+        }
+    }
+
+
+    function reviewsRates(m, s) {
+
+        var r = parseInt(m);
+        var c = parseInt(s);
+
+
+        for (var i = 1; i <= r; i++) {
+            $("#" + c + i).attr('class', 'starGlow');
+        }
+        // unselect remaining
+        for (var i = r + 1; i <= 5; i++) {
+            $("#" + c + i).attr('class', 'starFade');
+        }
+
+
+
+    }
+
+
+
+</script>
+
+
+
+<table width="100%">
+
+
+    <tr>
+        <a href="@Url.Action("Catalog", "Home")"> BicycleCatalog </a> >
+        <a href="~/StoreFront/Index/@ViewBag.Subcategory">
+            @ViewBag.Category > @ViewBag.Subcategory
+
+
+
+        </a> >   @ViewBag.PName
+    </tr>
+    </br>
+    </br>
+
+    <tr>
+
+
+        <td width="50%" align="center">
+            @{
+
+
+                string picturename = "";
+                string color = "";
+
+
+                if (Model.FirstOrDefault().Color.Equals("no"))
+                {
+                    picturename = ViewBag.PName + ".jpg";
+
+                    color = picturename;
+                }
+                else
+                {
+                    picturename = ViewBag.PName + "_" + Model.FirstOrDefault().Color + ".jpg";
+
+                    color = Model.FirstOrDefault().Color;
+                }
+
+
+            }
+
+            <a id="maina" href="~/Content/Images/Products/@picturename" class="MYCLASS" title=@ViewBag.PName rel='gal1'>
+                <img id="mainimg" src="~/Content/Images/Products/@picturename" title=@ViewBag.PName width="400" height="400">
+            </a>
+
+
+
+
+
+        </td>
+
+        <td valign="top" width="50%">
+            <h1> @Model.FirstOrDefault().Brand.ToString()</h1>
+            <h2 id="name"> @Model.FirstOrDefault().Name.ToString()</h2>
+            <div>
+
+                @if (numReviews > 0)
+                {
+                    <span id="prodRate1"></span><span id="prodRate2"></span><span id="prodRate3"></span><span id="prodRate4"></span><span id="prodRate5"></span>
+                }
+
+                <a href="~/Products/Preview/@ViewBag.PName">  <label id="previewRating"></label></a>
+            </div>
+
+            <script> productRate('@ratingProduct', '@numReviews') </script>
+
+            <h3> $ @Model.FirstOrDefault().Price.ToString()</h3>
+
+            @{
+                List<SelectListItem> coloritems = new List<SelectListItem>();
+                coloritems.Add(new SelectListItem
+                {
+                    Text = "Available",
+                    Value = "0",
+
+                });
+
+                foreach (var a in Model)
+                {
+                    coloritems.Add(new SelectListItem
+                    {
+                        Text = a.Color,
+                        Value = a.Color
+                    });
+
+                }
+
+            }
+
+            <table>
+                <td>
+                    <b> Color:</b>
+                </td>
+                <td>
+                    <b> Size:</b>
+                </td>
+
+                <tr>
+                    <!--- onchange="SetColor(this.options[this.selectedIndex].text)" --->
+                    <td>
+                        <select id="colorDropDown" onchange="Availability()" class="form-control" style="width:400px">
+
+                            <text>
+                                <option value="0">Select Color</option>
+
+                            </text>
+                            <optgroup label="Available">
+
+                                @foreach (var item in Model)
+            {
+                                    <text>
+                                        <option value="@item.Color"><b>@item.Color </b></option>
+
+                                    </text>
+                                }
+
+
+                            </optgroup>
+
+                        </select>
+                    </td>
+                    <td>
+                        <select id="sizeDropDown" onchange="Availability()" class="form-control" style="width:400px">
+
+                            <text>
+                                <option value="0">Select Size</option>
+
+                            </text>
+                            <optgroup label="Available">
+
+                                @foreach (var item in Model)
+                                {
+                                    <text>
+                                        <option value="@item.Size"><b>@item.Size </b></option>
+
+                                    </text>
+                                }
+
+
+                            </optgroup>
+
+                        </select>
+                    </td>
+                </tr>
+                <td>
+                    <h4> <b>  Availability:</b> <div id="message">Please select options</div> </h4>
+
+                </td>
+                <tr>
+                    <td>
+
+
+
+
+                        <p class="text-center" hidden="hidden" id="addtocart">
+
+         
+                        @*    @Html.ActionLink("Add to cart", "AddToCart", "ShoppingCart", new { id ="" }, new { @class = "btn btn-info" })*@
+                        </p>
+
+
+                    </td>
+                    </tr>
+              <tr/>
+                <tr>
+                    <td align="justify"><!-- Go to www.addthis.com/dashboard to customize your tools --> <div class="addthis_inline_share_toolbox_n4eb"></div> </td>   
+                    </tr>
+            </table>
+
+
+
+        </td>
+
+    </tr>
+    <tr>
+        <td align="center">
+            <p id="cname"></p>
+        </td>
+    </tr>
+    <tr>
+        <td align="center">
+
+
+
+            <div id="thumblist">
+                <a class="zoomThumbActive" href='#' rel="{gallery: 'gal1', smallimage: '../../Content/Images/Products/@picturename',largeimage: '../../Content/Images/Products/@picturename'}" title="@color"><img src="../../Content/Images/Products/@picturename" alt="@color" width="50" height="50" onclick="displayName('@color.ToString()')" /></a>
+                @foreach (var p in Model.Skip(1))
+                {
+                    if (p.Color.Equals("no"))
+                    { picturename = ViewBag.PName + ".jpg"; }
+                    else
+                    {
+                        picturename = ViewBag.PName + "_" + p.Color + ".jpg";
+
+                    }
+
+                    <a href='#' rel="{gallery: 'gal1', smallimage: '../../Content/Images/Products/@picturename',largeimage: '../../Content/Images/Products/@picturename'}" title="@p.Color"><img src="~/Content/Images/Products/@picturename" alt="@p.Color" width="50" height="50" onclick="displayName('@p.Color.ToString()')" /></a>
+
+
+                }
+
+                <!--  <a href='#' rel="{gallery: 'gal1', smallimage: '../../Content/Images/Products/trek-domane-road3.jpg',largeimage: '../../Content/Images/Products/trek-domane-road3.jpg'}" title="img2 jqzoom gallery"><img src='~/Content/Images/Products/trek-domane-road3.jpg' alt="img2 jqzoom gallery" width="50" height="50" /></a>
+                     <a href='#' rel="{gallery: 'gal1', smallimage: '../../Content/Images/Products/trek-domane-road2.jpg',largeimage: '../../Content/Images/Products/trek-domane-road2.jpg'}" title="img3 jqzoom gallery"><img src='~/Content/Images/Products/trek-domane-road2.jpg' alt="img3 jqzoom gallery" width="50" height="50" /></a>
+                -->
+            </div>
+
+        </td>
+        <td></td>
+
+
+    </tr>
+
+</table>
+<table>
+    <tr>
+        <td width="50%">
+            <h2> <b>Details </b></h2>
+            <div align="left">@Model.FirstOrDefault().Description</div>
+        </td>
+        <td width="50%" align="center">
+
+            @{ int cat_id = Model.FirstOrDefault().Category_Id;
+
+                if (cat_id > 0 && cat_id <= 9) //Bikes
+                {
+
+                    <button type="button" button class="btn btn-primary btn-block " onclick="$('#imgname1').toggle();">Geometry Chart</button>
+
+                    <div id="imgname1">
+                        <img class="img" src="~/Content/Images/2017_Trek_Marlin_7_Geometry_Chart.jpg" width="500" height="500">
+                    </div>
+                    <h3> <b>Pedals sold separately</b> </h3>
+
+                }
+
+
+
+                if (cat_id == 11) ////Pedals
+                {
+                    <button type="button" button class="btn btn-default " onclick="$('#imgname1').toggle();">Geometry Chart</button>
+
+                    <div id="imgname1">
+                        <img class="img" src="~/Content/Images/cleat_feature1.jpg" width="500" height="500">
+                    </div>
+
+                }
+
+
+                if (cat_id == 11) ////Pedals
+                {
+                    <button type="button" button class="btn btn-default " onclick="$('#imgname1').toggle();">Cleat compatibility: SPD</button>
+
+                    <div id="imgname1">
+                        <img class="img" src="~/Content/Images/cleat_feature1.jpg" width="500" height="500">
+                    </div>
+                    <b>
+                        <h4>Cleats included </h4>
+                        <h4> Weight: 533 grams (pair)</h4>
+                    </b>
+
+                }
+
+                if (cat_id == 12) ////Saddles
+                {
+                    <button type="button" button class="btn btn-default " onclick="$('#imgname1').toggle();">Deep Groove Design</button>
+
+                    <div id="imgname1">
+                        <img class="img" src="~/Content/Images/Deep-Groove-Design.jpg" width="500" height="500">
+                    </div>
+
+
+                }
+                if (cat_id == 12) ////Tires
+                {
+                    <button type="button" button class="btn btn-default " onclick="$('#imgname1').toggle();">Flat Protection System</button>
+
+                    <div id="imgname1">
+                        <img class="img" src="~/Content/Images/Multi-Sport-FPS.jpg" width="500" height="500">
+                    </div>
+
+                }
+
+                if (cat_id == 29) ////Gloves
+                {
+                    <button type="button" button class="btn btn-default " onclick="$('#imgname1').toggle();">Sizing chart</button>
+
+                    <div id="imgname1">
+                        <img class="img" src="~/Content/Images/bon_sz_glov_11_f.jpg" width="500" height="500">
+                    </div>
+
+                }
+
+                if (cat_id > 29 && cat_id <= 34) ////Sizes of clothes
+                {
+                    <button type="button" button class="btn btn-default" onclick="$('#imgname1').toggle();">Sizing chart</button>
+
+                    <div id="imgname1">
+                        <img class="img" src="~/Content/Images/size_chart3.jpg" width="500" height="500">
+                    </div>
+
+                }
+
+                if (cat_id == 36 || cat_id == 37) ////Helmets
+                {
+                    <b>
+                        <h4> Small/Medium: 50-57cm</h4>
+
+                        <h4> Medium/Large: 55-61cm </h4>
+                    </b>
+
+                }
+
+
+
+                if (cat_id == 13) ////Sizes of shoes
+                {
+                    <button type="button" button class="btn btn-default " onclick="$('#imgname1').toggle();">Sizing chart</button>
+
+                    <div id="imgname1">
+                        <img class="img" src="~/Content/Images/bont_shoe_size_chart_12_f.jpg" width="500" height="500">
+                    </div>
+
+                }
+
+
+
+            }
+
+
+
+
+
+        </td>
+    </tr>
+</table>
+
+<h2><b>Specs</b></h2>
+<div align="left">@Model.FirstOrDefault().Feature</div>
+@{
+
+    int counter = 0;
+    foreach (var i in Model)
+    {
+        if (i.Video != null || i.Video != "")
+        {
+
+            counter++;
+
+        }
+
+
+
+    }
+    if (counter > 0)
+    {
+
+        <h2> <b>   Video    </b></h2>
+
+
+    }
+}
+
+<div align="center">
+    @foreach (var i in Model)
+    {
+        string url = "";
+
+        if (i.Video != null && i.Video != "")
+        {
+
+            url = i.Video.ToString();
+            url = @url.Split('=')[1];
+            url = "http://www.youtube.com/embed/" + url;
+
+            <iframe width="560"
+                    height="315"
+                    src=@url
+                    frameborder="0"
+                    allowfullscreen></iframe>
+
+                    <br />
+                    <br />
+        }
+
+
+    }
+</div>
+
+
+
+<h2> <b>Part Numbers </b></h2>
+<div>
+    <table align="center" width="100%">
+        <tr>
+            <td align="center">
+                <h4> <b> Option </b></h4>
+            </td>
+            <td align="center"> <h4> <b>UPC </b></h4></td>
+            <td align="center"> <h4> <b>MPN </b></h4></td>
+            <td align="center"> <h4> <b>Store SKU </b></h4></td>
+        </tr>
+        @foreach (var m in Model)
+        {
+            string[] a = m.PartNumber.Split('\t');
+            <tr>
+
+                @foreach (var part in a)
+                {
+                    <td align="center"> @part.Trim() </td>
+                }
+
+            </tr>
+        }
+
+    </table>
+
+
+
+</div>
+
+<h2> <b> Reviews </b></h2>
+@if (numReviews > 0)
+{
+    <h3> <b> Read @numReviews Reviews</b></h3>}
+else
+{
+    <h3> <b> Be the first who will write a review for this product !!! </b></h3>
+
+}
+<a href="../../Reviews/Create/@Model.FirstOrDefault().Id" class="btn btn-warning">Write a Review</a>
+<br />
+<br />
+@if (numReviews > 0)
+{
+
+    int blyes = 0;
+    int blno = 0;
+    int giftyes = 0;
+    int giftno = 0;
+    var pros = new Dictionary<string,int>();
+    var cons = new Dictionary<string, int>();
+    var bestuses = new Dictionary<string, int>();
+
+    foreach (var review in reviewList)
+    {
+        if (review.BottomLine != null || review.BottomLine != "")
+        {
+
+            if (review.BottomLine == "Yes") { blyes++; }
+            if (review.BottomLine == "No") { blno++; }
+        }
+
+
+        if (review.Gift != null || review.Gift != "")
+        {
+
+            if (review.Gift == "Yes") { giftyes++; }
+            if (review.Gift == "No") { giftno++; }
+        }
+
+
+        string poma = review.Pros.Trim();
+
+        string[] s = poma.Split(';');
+
+        // pros
+        if (review.Pros != null || review.Pros != "")
+        {
+            if (pros.Count == 0)
+            {
+                for (int i = 0; i <= s.Length - 2; i++)
+                {
+                    if (!s[i].IsEmpty())
+                    {
+                        pros.Add(s[i], 1);
+
+                    }
+
+                }
+
+            }
+            else {
+
+                for (int i = 0; i <= s.Length - 2; i++)
+                {
+                    if (!s[i].IsEmpty())
+                    {
+                        int flag = 0;
+                        string flagname = "";
+                        foreach (var item in pros)
+                        {
+
+                            if (item.Key == s[i])
+                            {
+                                flagname = item.Key;
+                                flag = 1;
+                            }
+
+
+
+
+
+                        }
+                        if (flagname != "" && flag == 1)
+                        { pros[flagname] = Convert.ToInt16(pros[flagname]) + 1; }
+
+                        if (flag == 0)
+                        {
+
+                            pros.Add(s[i],1);
+
+
+
+
+                        }
+
+
+                    }
+                }
+
+
+
+
+            }
+
+        }
+
+        //cons
+        poma = review.Cons.Trim();
+
+        s = poma.Split(';');
+
+        if (review.Cons != null || review.Cons != "")
+        {
+            if (cons.Count == 0)
+            {
+                for (int i = 0; i <= s.Length - 2; i++)
+                {
+                    if (!s[i].IsEmpty())
+                    {
+                        cons.Add(s[i], 1);
+
+                    }
+
+                }
+
+            }
+            else
+            {
+
+                for (int i = 0; i <= s.Length - 2; i++)
+                {
+                    if (!s[i].IsEmpty())
+                    {
+                        int flag = 0;
+                        string flagname = "";
+                        foreach (var item in cons)
+                        {
+
+                            if (item.Key == s[i])
+                            {
+                                flagname = item.Key;
+                                flag = 1;
+                            }
+
+
+
+
+
+                        }
+                        if (flagname != "" && flag == 1)
+                        { cons[flagname] = Convert.ToInt16(cons[flagname]) + 1; }
+
+                        if (flag == 0)
+                        {
+
+                            cons.Add(s[i], 1);
+
+
+
+
+                        }
+
+
+                    }
+                }
+
+
+
+
+            }
+
+        }
+
+
+
+        //bestuses
+        poma = review.BestUses.Trim();
+
+        s = poma.Split(';');
+
+        if (review.BestUses != null || review.BestUses != "")
+        {
+            if (bestuses.Count == 0)
+            {
+                for (int i = 0; i <= s.Length - 2; i++)
+                {
+                    if (!s[i].IsEmpty())
+                    {
+                        bestuses.Add(s[i], 1);
+
+                    }
+
+                }
+
+            }
+            else
+            {
+
+                for (int i = 0; i <= s.Length - 2; i++)
+                {
+                    if (!s[i].IsEmpty())
+                    {
+                        int flag = 0;
+                        string flagname = "";
+                        foreach (var item in bestuses)
+                        {
+
+                            if (item.Key == s[i])
+                            {
+                                flagname = item.Key;
+                                flag = 1;
+                            }
+
+
+
+
+
+                        }
+                        if (flagname != "" && flag == 1)
+                        { bestuses[flagname] = Convert.ToInt16(bestuses[flagname]) + 1; }
+
+                        if (flag == 0)
+                        {
+
+                            bestuses.Add(s[i], 1);
+
+
+
+
+                        }
+
+
+                    }
+                }
+
+
+
+
+            }
+
+        }
+
+
+
+
+
+
+    }
+    string recommendationPercent = (blyes*100 / (blyes + blno)).ToString();
+
+    <div style="background-color:lightgreen; width:400px; height:30px; align-items:center">
+        <b style="color:green"> <b> @recommendationPercent % </b> of the people recommend this product !</b>
+
+    </div>
+    <br/>
+    <br />
+    recommendationPercent= (giftyes * 100 / (giftyes + giftno)).ToString();
+    <div style="background-color:yellow; width:400px; height:30px; align-items:center">
+        <b style="color:black"> <b> @recommendationPercent % </b> of the buyers use as a gift this product !</b>
+
+    </div>
+    <br />
+    <br />
+
+    <div class="col-md-4" valign="top" align="left">
+        <div style="background-color:lightgreen; width:100px; align-items:center">
+            <b style="color:green">  &nbsp; &nbsp; &nbsp; &nbsp;Pros</b>
+
+        </div>
+
+        @foreach (var item in pros)
+        {
+
+            <div>
+                +  @item.Key (@item.Value)
+
+                </div>
+             
+
+
+
+
+
+
+        }
+
+
+
+
+
+      </div>
+        <div class="col-md-4" valign="top" align="left">
+            <div style="background-color:palevioletred; width:100px; align-items:center">
+                <b style="color:darkred">  &nbsp; &nbsp; &nbsp; &nbsp;Cons</b>
+
+            </div>
+
+            @foreach (var item in cons)
+            {
+
+                <div>
+                    -  @item.Key (@item.Value)
+
+                </div>
+            }
+
+
+      </div>
+
+      <div class="col-md-4" valign="top" align="left">
+          <div style="background-color:cornflowerblue; width:100px; align-items:center">
+              <b style="color:blue">  &nbsp; &nbsp; Best Uses</b>
+          </div>
+
+          @foreach (var item in bestuses)
+          {
+
+              <div>
+                  ·   @item.Key (@item.Value)
+
+              </div>
+          }
+      </div>
+
+
+}
+
+  @for (int i = 0; i < numReviews; i++)
+  {
+      <br/>
+    <br />
+    <br />
+
+  }
+
+
+<div class="row" style="background-color:gray">
+    <h5>  &nbsp;&nbsp; Reviewed by @numReviews customers</h5>
+</div>
+
+@Html.Action("PreviewReviews",new { id=Model.FirstOrDefault().Id})
+
+<div class="row" style="background-color:gray">
+    <h5>  &nbsp;&nbsp; Reviewed by @numReviews customers</h5>
+</div>
+
+@*
+    @using (Html.BeginForm("Preview", "Products", FormMethod.Get))
+    {
+            if(numReviews > 0)
+            {
+                <div class="row" style="background-color:gray">
+                    <h5>  &nbsp;&nbsp; Reviewed by @numReviews customers</h5>
+                </div>
+                <div class="row" style="background-color: lightgray">
+                    <h5>  &nbsp;&nbsp; Displaying reviews <b>1-@numReviews </b></h5>
+                </div>
+                <br />
+                <br />
+                foreach (var review in reviewList)
+                {
+                    <div class="row">
+
+
+
+                        <div class="col-md-4">
+                            <table>
+
+                                <tr>
+                                    <td>
+                                        By  <b>@review.Nickname </b> from <b>@review.Location </b>
+
+                                    </td>
+                                </tr>
+                                <br />
+                                <br />
+                                <tr>
+                                    <td>
+                                        <b> @review.CyclingStyle ,  @review.DescribeYourself </b> - Bicycle rider
+
+
+                                    </td>
+                                </tr>
+
+
+                            </table>
+                        </div>
+
+                        <div class="col-md-8" valign="top" align="left">
+
+                            <div>
+                                @review.DatePosted
+
+                            </div>
+                            <div>
+
+                                <div style="align-items:center;display:inline-flex">
+
+                                    @for (int i = 1; i <= 5; i++)
+
+                            {
+                                string poma = review.Id.ToString() + i;
+                                        <span id=@poma></span>
+                                    }
+
+                                    &nbsp;  &nbsp; <h5> <b> @review.Rating </b> </h5>
+                                </div>
+
+                                <script> reviewsRates('@review.Rating', '@review.Id') </script>
+
+
+                            </div>
+                            <div>
+
+                                <h2> <b> @review.Headline</b></h2>
+
+                            </div>
+
+                            <div>
+                                @if (!review.Pros.IsEmpty())
+                                {  <div style="align-items:center;display:inline-flex">
+                            <div style="background-color:lightgreen; width:100px; align-items:center">
+                                <b style="color:green">  &nbsp; &nbsp; &nbsp; &nbsp;Pros</b>
+
+                            </div>
+                            &nbsp;  &nbsp;
+                            <div>
+
+                                @{
+                                    string a = review.Pros;
+                                    a = a.Trim();
+                                    string[] s = a.Split(';');
+                                    string previewString = "";
+
+
+                                    for (int i = 0; i < s.Length; i++)
+                                    {
+                                        if (!s[i].IsEmpty())
+                                        {
+                                            if (s[i] == s[s.Length - 2] || (s.Length == 2))
+                                            {
+                                                previewString = previewString + " + " + s[i];
+                                            }
+
+                                            else
+                                            {
+                                                previewString = previewString + " + " + s[i] + ",";
+                                            }
+                                        }
+                                    }
+                                }
+
+
+
+                                @previewString
+
+                            </div>
+                        </div>
+                        <br />
+                                    }
+                            </div>
+
+                            <div>
+                                @if (!review.Cons.IsEmpty())
+                                { <div style="align-items:center;display:inline-flex">
+                            <div style="background-color:palevioletred; width:100px; align-items:center">
+                                <b style="color:darkred">  &nbsp; &nbsp; &nbsp; &nbsp;Cons</b>
+
+                            </div>
+                            &nbsp;  &nbsp;
+                            <div>
+                                @{
+                                    string a = review.Cons;
+                                    a = a.Trim();
+                                    string[] s = a.Split(';');
+                                    string previewString = "";
+
+
+                                    for (int i = 0; i < s.Length; i++)
+                                    {
+                                        if (!s[i].IsEmpty())
+                                        {
+                                            if (s[i] == s[s.Length - 2] || (s.Length == 2))
+                                            {
+                                                previewString = previewString + " - " + s[i];
+                                            }
+
+                                            else
+                                            {
+                                                previewString = previewString + " - " + s[i] + ",";
+                                            }
+                                        }
+                                    }
+
+                                }
+                                @previewString
+
+                            </div>
+                        </div>
+                                    }
+                                <br />
+                            </div>
+                            <div>
+                                @if (!review.BestUses.IsEmpty())
+                                {
+                                    <div style="align-items:center;display:inline-flex">
+                                        <div style="background-color:cornflowerblue; width:100px; align-items:center">
+                                            <b style="color:blue">  &nbsp; &nbsp; Best Uses</b>
+
+                                        </div>
+                                        &nbsp;  &nbsp;
+                                        <div>
+
+                                            @{
+                                                string a = review.BestUses;
+                                                a = a.Trim();
+                                                string[] s = a.Split(';');
+                                                string previewString = "";
+
+
+                                                for (int i = 0; i < s.Length; i++)
+                                                {
+                                                    if (!s[i].IsEmpty())
+                                                    {
+                                                        if (s[i] == s[s.Length - 2] || (s.Length == 2))
+                                                        {
+                                                            previewString = previewString + " · " + s[i];
+                                                        }
+
+                                                        else
+                                                        {
+                                                            previewString = previewString + " · " + s[i] + ",";
+                                                        }
+                                                    }
+                                                }
+
+                                            }
+                                            @previewString
+
+                                        </div>
+                                        <br />
+                                    </div>
+                                                }
+                            </div>
+                            <br />
+
+                            <div style="width:100%">
+
+                                @review.Comments
+
+                            </div>
+
+
+                        </div>
+
+
+
+
+
+
+
+                    </div>
+                    <hr />
+
+                                                }
+
+                                                <div class="row" style="background-color: lightgray">
+                                                    <h5>  &nbsp;&nbsp; Displaying reviews <b>1-@numReviews </b></h5>
+                                                </div>
+                                                }
+
+    }
+*@
+<!--   number of reviews inside-->
+
+
+<!-- Go to www.addthis.com/dashboard to customize your tools -->
+<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5bdba22558da1a9e"></script>
+
+
+
+
+
+
+
+        <script>
+            var jq = jQuery.noConflict(true);
+            (function ($) {
+                var options = {
+                    zoomType: 'standard',
+                    preloadImages: true,
+                    alwaysOn: false,
+                    zoomWidth: 650,
+                    zoomHeight: 540,
+                    xOffset: 90,
+                    yOffset: 30,
+                    position: 'left'
+                    //...MORE OPTIONS
+                };
+                $(document).ready(function () {
+
+
+
+
+                    function SetColor() {
+                        var an = $("#colorDropDown option:selected").text();
+                        console.log(an);
+                        // $(".MYCLASS").remove();
+                        document.getElementById("maina").class = "MYCLASS";
+                        document.getElementById("maina").href = "../../Content/Images/Products/@ViewBag.PName" + "_" + an.trim() + ".jpg";
+                        document.getElementById("mainimg").src = "../../Content/Images/Products/@ViewBag.PName" + "_" + an.trim() + ".jpg";
+                        //   $("a[class|='zoomThumbActive']").removeClass("zoomThumbActive");
+                        //   $(".zoomThumbActive").remove();
+                        //  document.getElementsByTagName("a")[4].removeAttribute("class");
+                        // $('a[title|="Viper Red"]').attr("class", "zoomThumbActive");
+                        //      $('a[title="Viper Red"]')[0].addClass("zoomThumbActive");
+
+
+
+                        //   $("[title|='" + an + "']").attr("class", "zoomThumbActive");
+                        //   $("a").attr("title",).
+                        var options = {
+                            zoomType: 'standard',
+                            preloadImages: true,
+                            alwaysOn: false,
+                            zoomWidth: 650,
+                            zoomHeight: 540,
+                            xOffset: 90,
+                            yOffset: 30,
+                            position: 'left'
+                            //...MORE OPTIONS
+                        };
+
+                        //        var thumbUrl= "~/Content/Images/Products/@ViewBag.PName "+"'_'"+an+".jpg";
+                        //        var thumbImg = "~/Content/Images/Products/@ViewBag.PName " + "'_'" + an + ".jpg";
+                        //   //        $(".MYCLASS").remove();
+                        //        $(".MYCLASS").append("<a href='" + thumbUrl + "' class='MYCLASS'><img src='" + thumbImg + "' rel='gal1' /></a>");
+
+                        // $(".MYCLASS").unbind();
+                        //  $("#mainimg").jqzoom(options);
+                        //     $('.MYCLASS').jqzoom(options);
+
+
+                        //    $("#mainimg").attr('src', thumbImg);
+                    }
+                    $("#colorDropDown").on("change", SetColor);
+
+
+
+
+                    $('.MYCLASS').jqzoom(options);
+
+
+                    $("button").click(function () {
+                        $("#imgname1").toggleClass("hidden");
+                    });
+
+
+
+
+                });
+            }(jq));
+
+        </script>
+        <!--
+            <script >
+             //   var jq = jQuery.noConflict(true);
+                $(document).ready(function () {
+                    var jq = jQuery.noConflict(true);
+
+
+
+
+
+                });
+            </script>
+
+            -->

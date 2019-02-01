@@ -1,0 +1,419 @@
+﻿@model BicycleWorldShop.Models.FileUploadModel
+
+@{
+    ViewBag.Title = "BicycleWorldShop.com";
+}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+
+
+<style>
+    /*Copied from bootstrap to handle input file multiple*/
+    .btn {
+        display: inline-block;
+        padding: 6px 12px;
+        margin-bottom: 0;
+        font-size: 14px;
+        font-weight: normal;
+        line-height: 1.42857143;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        cursor: pointer;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        background-image: none;
+        border: 1px solid transparent;
+        border-radius: 4px;
+    }
+    /*Also */
+    .btn-success {
+        border: 1px solid #c5dbec;
+        background: #D0E5F5;
+        font-weight: bold;
+        color: #2e6e9e;
+    }
+    /* This is copied from https://github.com/blueimp/jQuery-File-Upload/blob/master/css/jquery.fileupload.css */
+    .fileinput-button {
+        position: relative;
+        overflow: hidden;
+    }
+
+        .fileinput-button input {
+            position: absolute;
+            top: 0;
+            right: 0;
+            margin: 0;
+            opacity: 0;
+            -ms-filter: 'alpha(opacity=0)';
+            font-size: 200px;
+            direction: ltr;
+            cursor: pointer;
+        }
+
+    .thumb {
+        height: 80px;
+        width: 100px;
+        border: 1px solid #000;
+    }
+
+    ul.thumb-Images li {
+        width: 120px;
+        float: left;
+        display: inline-block;
+        vertical-align: top;
+        height: 120px;
+    }
+
+    .img-wrap {
+        position: relative;
+        display: inline-block;
+        font-size: 0;
+    }
+
+        .img-wrap .close {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            z-index: 100;
+            background-color: #D0E5F5;
+            padding: 5px 2px 2px;
+            color: #000;
+            font-weight: bolder;
+            cursor: pointer;
+            opacity: .5;
+            font-size: 23px;
+            line-height: 10px;
+            border-radius: 50%;
+        }
+
+        .img-wrap:hover .close {
+            opacity: 1;
+            background-color: #ff0000;
+        }
+
+    .FileNameCaptionStyle {
+        font-size: 12px;
+    }
+</style>
+
+
+
+
+
+
+
+<script type="text/javascript">
+
+
+
+    //I added event handler for the file upload control to access the files properties.
+    document.addEventListener("DOMContentLoaded", init, false);
+
+    //To save an array of attachments
+    var AttachmentArray = [];
+
+    //counter for attachment array
+    var arrCounter = 0;
+
+    //to make sure the error message for number of files will be shown only one time.
+    var filesCounterAlertStatus = false;
+
+    //un ordered list to keep attachments thumbnails
+    var ul = document.createElement('ul');
+    ul.className = ("thumb-Images");
+    ul.id = "imgList";
+
+    function init() {
+        //add javascript handlers for the file upload event
+        document.querySelector('#files').addEventListener('change', handleFileSelect, false);
+    }
+
+    //the handler for file upload event
+    function handleFileSelect(e) {
+        //to make sure the user select file/files
+        if (!e.target.files) return;
+
+        //To obtaine a File reference
+        var files = e.target.files;
+
+        // Loop through the FileList and then to render image files as thumbnails.
+        for (var i = 0, f; f = files[i]; i++) {
+
+            //instantiate a FileReader object to read its contents into memory
+            var fileReader = new FileReader();
+
+            // Closure to capture the file information and apply validation.
+            fileReader.onload = (function (readerEvt) {
+                return function (e) {
+
+                    //Apply the validation rules for attachments upload
+                    ApplyFileValidationRules(readerEvt)
+
+                    //Render attachments thumbnails.
+                    RenderThumbnail(e, readerEvt);
+
+                    //Fill the array of attachment
+                    FillAttachmentArray(e, readerEvt)
+                };
+            })(f);
+
+            // Read in the image file as a data URL.
+            // readAsDataURL: The result property will contain the file/blob's data encoded as a data URL.
+            // More info about Data URI scheme https://en.wikipedia.org/wiki/Data_URI_scheme
+            fileReader.readAsDataURL(f);
+        }
+        document.getElementById('files').addEventListener('change', handleFileSelect, false);
+    }
+
+    //To remove attachment once user click on x button
+    jQuery(function ($) {
+        $('div').on('click', '.img-wrap .close', function () {
+            var id = $(this).closest('.img-wrap').find('img').data('id');
+
+            //to remove the deleted item from array
+            var elementPos = AttachmentArray.map(function (x) { return x.FileName; }).indexOf(id);
+            if (elementPos !== -1) {
+                AttachmentArray.splice(elementPos, 1);
+            }
+
+            //to remove image tag
+            $(this).parent().find('img').not().remove();
+
+            //to remove div tag that contain the image
+            $(this).parent().find('div').not().remove();
+
+            //to remove div tag that contain caption name
+            $(this).parent().parent().find('div').not().remove();
+
+            //to remove li tag
+            var lis = document.querySelectorAll('#imgList li');
+            for (var i = 0; li = lis[i]; i++) {
+                if (li.innerHTML == "") {
+                    li.parentNode.removeChild(li);
+                }
+            }
+
+        });
+    }
+    )
+
+    //Apply the validation rules for attachments upload
+    function ApplyFileValidationRules(readerEvt) {
+        //To check file type according to upload conditions
+        if (CheckFileType(readerEvt.type) == false) {
+            alert("The file (" + readerEvt.name + ") does not match the upload conditions, You can only upload jpg files");
+            e.preventDefault();
+            return;
+        }
+
+        //To check file Size according to upload conditions
+        if (CheckFileSize(readerEvt.size) == false) {
+            alert("The file (" + readerEvt.name + ") does not match the upload conditions, The maximum file size for uploads should not exceed 300 KB");
+            e.preventDefault();
+            return;
+        }
+
+        //To check files count according to upload conditions
+        if (CheckFilesCount(AttachmentArray) == false) {
+            if (!filesCounterAlertStatus) {
+                filesCounterAlertStatus = true;
+                alert("You have added more than 10 files. According to upload conditions you can upload 10 files maximum");
+            }
+            e.preventDefault();
+            return;
+        }
+    }
+
+    //To check file type according to upload conditions
+    function CheckFileType(fileType) {
+        if (fileType == "image/jpeg") {
+            return true;
+        }
+        else {
+            return false;
+        }
+        return true;
+    }
+
+    //To check file Size according to upload conditions
+    function CheckFileSize(fileSize) {
+        if (fileSize < 500000000) {
+            return true;
+        }
+        else {
+            return false;
+        }
+        return true;
+    }
+
+    //To check files count according to upload conditions
+    function CheckFilesCount(AttachmentArray) {
+        //Since AttachmentArray.length return the next available index in the array,
+        //I have used the loop to get the real length
+        var len = 0;
+        for (var i = 0; i < AttachmentArray.length; i++) {
+            if (AttachmentArray[i] !== undefined) {
+                len++;
+            }
+        }
+        //To check the length does not exceed 10 files maximum
+        if (len > 9) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+    //Render attachments thumbnails.
+    function RenderThumbnail(e, readerEvt) {
+        var li = document.createElement('li');
+        ul.appendChild(li);
+        li.innerHTML = ['<div class="img-wrap"> <span class="close">&times;</span>' +
+            '<img class="thumb" src="', e.target.result, '" title="', escape(readerEvt.name), '" data-id="',
+            readerEvt.name, '"/>' + '</div>'].join('');
+
+        var div = document.createElement('div');
+        div.className = "FileNameCaptionStyle";
+        li.appendChild(div);
+        div.innerHTML = [readerEvt.name].join('');
+        document.getElementById('Filelist').insertBefore(ul, null);
+    }
+
+    //Fill the array of attachment
+    function FillAttachmentArray(e, readerEvt) {
+        AttachmentArray[arrCounter] =
+        {
+            AttachmentType: 1,
+            ObjectType: 1,
+            FileName: readerEvt.name,
+            FileDescription: "Attachment",
+            NoteText: "",
+            MimeType: readerEvt.type,
+            Content: e.target.result.split("base64,")[1],
+            FileSizeInBytes: readerEvt.size,
+        };
+        arrCounter = arrCounter + 1;
+    }
+
+
+
+
+</script>
+
+@Html.ActionLink("<< Back to Products Preview", "Index", "Products")
+@using (Html.BeginForm("Index", "FileUpload", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    <label style="font-size: 14px;">
+        <span style="color:navy;font-weight:bold">Attachment Instructions :</span>
+    </label>
+
+
+    <ul>
+        <li>
+            Allowed only files with extension (jpg,jpeg)
+        </li>
+        <li>
+            Maximum number of allowed files 10 with 5 MB for each
+        </li>
+        <li>
+            you can select files from different folders
+        </li>
+    </ul>
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.files, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(model => model.files, "", new { @type = "file", @multiple = "multiple", @class = "btn" })
+                @Html.ValidationMessageFor(model => model.files, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Upload" class="btn btn-primary" accept="image/jpeg" />
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.Label("Existing photo (if any)", new { @class = "control-label col-md-2" })
+            <div id="preview">
+
+            </div>
+
+            <output id="Filelist"> <ul class="thumb-Images" id="imgList"></ul></output>
+
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10 text-success">
+                @ViewBag.UploadStatus
+            </div>
+        </div>
+    </div>
+}
+
+@*
+    <div class="col-xs-12 col-md-3">
+        <div class="thumbnail">
+            <img class="img-responsive" src="~/Content/Images/Products/@(product.Name).jpg">
+            <div class="caption text-center">
+                <p>
+                    <b>Name:</b> <span>@product.Name</span>
+                </p>
+
+                <p class="text-center">
+                    @Html.ActionLink("Add to cart", "AddToCart", "ShoppingCart", new { id = product.Id }, new { @class = "btn btn-info" })
+                </p>
+            </div>
+        </div>
+    </div>
+*@
+<h2>
+    <b>
+ If the image above is not the correct image,
+                    hit delete and try to Re-Upload:
+        </b>
+</h2>
+
+
+@foreach (var file in (IEnumerable<string>)ViewBag.Images)
+{
+    // if (File.Exists(Server.MapPath("~/Content/Images/Products/"
+    //              + file.FileName)))
+
+    // <img alt="" src="~/Images/Cakes/@Html.DisplayFor(modelItem => Model.files[i])" />
+    ///  <img alt="" src="~/Content/Images/Products/file" />
+    <div class="col-xs-12 col-md-3">
+        <div class="thumbnail">
+            <img src="@Url.Content(file)" alt="Hejsan" />
+            <div class="caption text-center">
+                <form action="/FileUpload/DeletePhoto" method="post" name="deletePhoto">
+                    @Html.AntiForgeryToken()
+
+                   
+                  
+                    <p>
+
+                        <b>Name:</b> <span>@file.Split('/').Last()</span>
+                    </p>
+                    <input type="hidden" name="photoFileName" value="@file.Split('/').Last()" />
+                    <input class="tiny button" type="submit" value="Delete" />
+
+
+
+                </form>
+                </div>
+            </div>
+    </div>
+
+}
+         
+            <script src="~/Scripts/jquery-1.10.2.min.js"></script>
+            <script src="~/Scripts/jquery.validate.min.js"></script>
+            <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>

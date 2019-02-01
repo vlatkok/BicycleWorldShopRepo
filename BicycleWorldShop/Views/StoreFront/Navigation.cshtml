@@ -1,0 +1,12 @@
+﻿@{ 
+    string category = ViewBag.SubCategory;
+
+
+}
+<table>
+
+   
+    <tr>  <a href="@Url.Action("Catalog", "Home")"> BicycleCatalog </a> > @ViewBag.Name > @Html.ActionLink(category, "Index", "StoreFront", new { id = category }, null)   </tr>
+ 
+    <tr><td><h1>@ViewBag.SubCategory</h1></td></tr>
+</table>

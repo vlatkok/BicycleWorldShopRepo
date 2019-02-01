@@ -1,0 +1,252 @@
+﻿@model IEnumerable<BicycleWorldShop.Models.Product>
+@{
+    ViewBag.Title = "Welcome";
+}
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+
+
+
+<style>
+
+    .carousel-indicators li {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin: 10px;
+    text-indent: 0;
+    cursor: pointer;
+    border: none;
+    border-radius: 50%;
+    background-color: grey;
+    box-shadow: inset 1px 1px 1px 1px rgba(0,0,0,0.5);    
+}
+.carousel-indicators .active {
+    width: 10px;
+    height: 10px;
+    margin: 10px;
+    background-color: white;
+}
+
+
+    </style>
+
+
+
+
+<table class="table">
+
+    <tbody style="text-align">
+        <tr style="width: 100%">
+            <td align="center" colspan="4">
+                <div class="slider">
+                    <ul class="rslides">
+                        <li><img src="~/Content/Images/HomeFront1.jpg" alt="" width="860" height="500" /></li>
+                        <li><img src="~/Content/Images/HomeFront2.jpg" alt="" width="860" height="500" /></li>
+                        <li><img src="~/Content/Images/HomeFront3.jpg" alt="" width="860" height="500" /></li>
+                        <li><img src="~/Content/Images/HomeFront4.jpg" alt="" width="860" height="500" /></li>
+                        <li><img src="~/Content/Images/HomeFront5.jpg" alt="" width="860" height="500" /></li>
+                    </ul>
+                </div>
+
+            </td>>
+        </tr>
+
+
+        <tr style="width: 100%">
+            <td align="center" style="width: 100%" colspan="4">
+                <h3 class="text-center">Click on a category below to get started</h3>
+            </td>
+        </tr>
+        <tr style="width: 100%">
+            <td align="center">
+
+
+
+                <div class="inner">
+
+                    <a href="~/StoreFront/Index/Road">
+                        <h2>Road</h2>
+                        <img src="~/Content/Images/road_bikes.jpg" alt="" width="300" height="150" />
+                    </a>
+
+                </div>
+            </td>
+            <td align="center">
+                <div class="inner">
+                    <a href="~/StoreFront/Index/Mountain">
+                        <h2>Mountain</h2>
+                        <img src="~/Content/Images/mountain_bikes.jpg" alt="" width="300" height="150" />
+                    </a>
+
+                </div>
+            </td>
+            <td align="center">
+                <div class="inner">
+                    <a href="~/StoreFront/Index/Commuter">
+                        <h2>Commuter</h2>
+                        <img src="~/Content/Images/commuter_bikes.jpg" alt="" width="300" height="150" />
+                    </a>
+
+                </div>
+            </td>
+            <td align="center">
+                <div class="inner">
+                    <a href="~/StoreFront/Index/Accessories">
+                        <h2>Accessories</h2>
+                        <img src="~/Content/Images/accessories.jpg" alt="" width="300" height="150" />
+                    </a>
+                </div>
+            </td>
+
+
+
+
+        </tr>
+
+    </tbody>
+
+
+
+</table>
+
+<table class="table">
+    <tbody style="text-align">
+        <tr style="width: 100%">
+            <td align="center" style="width: 100%" colspan="4">
+                <h3 class="text-center"> <b>Electric Bikes - In Stock Now!</b></h3>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+
+
+<div class="container" style="width:800px; height:800px;">
+   
+    <div id="myCarousel" class="carousel slide" data-ride="carousel">
+        <!-- Indicators -->
+        <ol class="carousel-indicators">
+            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+            <li data-target="#myCarousel" data-slide-to="1"></li>
+            <li data-target="#myCarousel" data-slide-to="2"></li>
+            <li data-target="#myCarousel" data-slide-to="3"></li>
+            <li data-target="#myCarousel" data-slide-to="4"></li>
+            <li data-target="#myCarousel" data-slide-to="5"></li>
+            <li data-target="#myCarousel" data-slide-to="6"></li>
+            <li data-target="#myCarousel" data-slide-to="7"></li>
+        </ol>
+
+        <!-- Wrapper for slides -->
+        <div class="carousel-inner">
+            @{
+                var first = true;
+            }
+
+            @for (int i = 0; i < Model.Count(); i++)
+            {
+                var item = Model.ElementAt(i);
+
+
+
+
+                <div class="@(first ? Html.Raw("item active") : Html.Raw("item"))">
+
+                    @{first = false;
+                    }
+                    <img src="~/Content/Images/Products/@(item.Name.Trim())_@(item.Color.Trim()).jpg" name=@(item.Name.Trim().ToString()) style="width:100%;">
+
+                    <div class="carousel-caption">
+                        <h3>
+                            <b><a href="~/Products/Preview/@item.Name" style="color:red"> @item.Name</a> </b>
+                        </h3>
+                        <p style="color:black"><b>@item.Price USD</b></p>
+                    </div>
+                </div>
+            }
+
+
+
+        </div>
+
+        <!-- Left and right controls -->
+        <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+            <span class="glyphicon glyphicon-chevron-left"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="right carousel-control" href="#myCarousel" data-slide="next">
+            <span class="glyphicon glyphicon-chevron-right"></span>
+            <span class="sr-only">Next</span>
+        </a>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<table style="width: 100%">
+
+    <tbody style="text-align">
+        <tr style="width: 100%">
+
+
+
+            @*    <table class="table" style="width:100%">
+                <tr>
+            *@
+
+            <td align="center">
+                <div width="33%">
+                    <div><a href="@Url.Action("ServicePage", "Home")"><img width="350" height="350" alt="Our Service Department" src="~/Content/Images/servicedepartment.jpg"></a></div><div class="content-block-content"><h2>Service Department</h2><p>Our service department repairs bikes every day, so we know what works well in the north state climate and terrain.</p><div><a href="@Url.Action("ServicePage", "Home")">Learn More</a></div></div>
+                </div>
+
+            </td>
+            <td align="center">
+                <div width="33%">
+                    <div><a href="https://www.trekbikes.com/us/en_US/project-one/" rel="noopener noreferrer" target="_blank"><img width="350" height="350" alt="Design Your New Bike" src="~/Content/Images/project_one_hp2copy-slimC.jpg"></a></div><div class="content-block-content"><h2>Trek Project One</h2><p>Design every detail of your dream ride. We'll then create your custom bike with the skill only the most-experienced builders and artists can offer.</p><div><a href="https://www.trekbikes.com/us/en_US/project-one/" rel="noopener noreferrer" target="_blank">Design Now</a></div></div>
+                </div>
+
+            </td>
+
+            <td align="center">
+                <div width="33%">
+                    <div><a href="https://d.comenity.net/trek/public/apply/ApplyIntro.xhtml?r=t&amp;Action=ApplyOnline.jsp" rel="noopener noreferrer" target="_blank"><img width="350" height="350" alt="Special Financing Available" src="~/Content/Images/financingcopy-slimC.jpg"></a></div><div class="content-block-content"><h2>Special Financing</h2><p>The Trek Credit Card makes it possible to own the bicycle of your dreams and all the great accessories to maximize your cycling fun, too.</p><div><a href="https://d.comenity.net/trek/public/apply/ApplyIntro.xhtml?r=t&amp;Action=ApplyOnline.jsp" rel="noopener noreferrer" target="_blank">Apply Online</a></div></div>
+                </div>
+
+
+            </td>
+            @*
+                </tr>
+                </table>
+            *@
+        </tr>
+    </tbody>
+</table>
+
+
+<script src="~/Content/Js/ResponsiveSlider.js"></script>
+
+
+<script>
+    $(function () {
+        $(".rslides").responsiveSlides();
+    });
+</script>
+<script type="text/javascript">
+
+    $(".rslides").responsiveSlides({
+        auto: true, // Boolean: Animate automatically, true or false
+        speed: 500 // Integer: Speed of the transition, in milliseconds
+    });
+</script>

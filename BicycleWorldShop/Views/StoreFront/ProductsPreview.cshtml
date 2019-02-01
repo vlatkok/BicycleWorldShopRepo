@@ -1,0 +1,38 @@
+﻿@model IEnumerable<BicycleWorldShop.Models.Product>
+
+@if (Model == null)
+{
+    <span>No items found...... Please try to filter results again !!! </span>
+}
+else
+{
+    foreach (var product in Model)
+    {
+
+
+        <div class="col-xs-12 col-md-3">
+            <div class="thumbnail">
+                <a href="~/Products/Preview/@product.Name">
+
+                    @if (product.Color.ToString().Equals("no"))
+                    {  <img class="img-responsive" src="~/Content/Images/Products/@(product.Name).jpg" name=@product.Name>}
+                    else
+                    {    <img class="img-responsive" src="~/Content/Images/Products/@(product.Name.Trim())_@(product.Color.Trim()).jpg" name=@product.Name>
+                    }
+                </a>
+                <div class="caption text-center">
+                    <p>
+                        <b><a href="~/Products/Preview/@product.Name"> @product.Name</a> </b>
+                    </p>
+                    <p>
+                        <b>@product.Price USD</b>
+                    </p>
+                    <p class="text-center">
+                        @Html.ActionLink("Add to cart", "AddToCart", "ShoppingCart", new { id = product.Id }, new { @class = "btn btn-info" })
+                    </p>
+                </div>
+            </div>
+        </div>
+    }
+
+}
