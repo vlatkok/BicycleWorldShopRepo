@@ -13,18 +13,21 @@ using System.IO;
 using System.Globalization;
 
 namespace BicycleWorldShop.Controllers
-{
+{        // Controller  with actions about Preview, Creating , Deleting and Editing products, Searching product, Finding subcategories and products availability!
     public class ProductsController : Controller
     {
         private BicycleWorldShopContext db = new BicycleWorldShopContext();
 
         // GET: Products
+
+        // Preview list of the products   
         public ActionResult Index()
         {
             return View(db.Products.ToList());
         }
 
         // GET: Products/Details/5
+        // Preview all saved Details about certain product
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -40,6 +43,7 @@ namespace BicycleWorldShop.Controllers
         }
 
         // GET: Products/Create
+        //Get action method about initial call to create new Product
         public ActionResult Create()
         {
             return View();
@@ -48,6 +52,7 @@ namespace BicycleWorldShop.Controllers
         // POST: Products/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // Post action method for saving new created product
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,Name,Price,Description,Feature,Video,PartNumber,Color,Availability,Brand,Size,Gender,LastUpdated,Category_Id")] Product product)
@@ -63,6 +68,7 @@ namespace BicycleWorldShop.Controllers
         }
 
         // GET: Products/Edit/5
+        // Editing product details by specific id, finding the product by id end sending to the editing view
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -80,6 +86,7 @@ namespace BicycleWorldShop.Controllers
         // POST: Products/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // Post action method about saving edited details for a product
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,Name,Price,Description,Feature,Video,PartNumber,Color,Availability,Brand,Size,Gender,LastUpdated,Category_Id")] Product product)
@@ -94,6 +101,7 @@ namespace BicycleWorldShop.Controllers
         }
 
         // GET: Products/Delete/5
+        // deleting product by id
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -109,6 +117,7 @@ namespace BicycleWorldShop.Controllers
         }
 
         // POST: Products/Delete/5
+        // Post action method about deleting product
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
@@ -119,6 +128,7 @@ namespace BicycleWorldShop.Controllers
             return RedirectToAction("Index");
         }
 
+        // Dispose the product
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -128,7 +138,7 @@ namespace BicycleWorldShop.Controllers
             base.Dispose(disposing);
         }
 
-
+        //Post action method that return selection list with subcategories from one product type
         [HttpPost]
         public ActionResult GetSubcategoryByID(string types)
         {
@@ -137,10 +147,6 @@ namespace BicycleWorldShop.Controllers
 
             var selectList = new List<SelectListItem>();
 
-            // For each string in the 'elements' variable, create a new SelectListItem object
-            // that has both its Value and Text properties set to a particular value.
-            // This will result in MVC rendering each item as:
-            //  <option value="State Name">State Name</option>
             foreach (var element in objsubcategory)
             {
                 selectList.Add(new SelectListItem
@@ -150,21 +156,16 @@ namespace BicycleWorldShop.Controllers
                 });
             }
 
-            //   return selectList;
-
-
-         //       SelectList obgsubcategory = new SelectList(objsubcategory, "Id", "SubCategoryName", );
-       //     ViewBag.Ob = objsubcategory.AsEnumerable();
-         // ViewBag.Sc = selectList;
+        
             return Json(selectList);
         }
 
-      
+      //Action about search page for products 
         public ActionResult SearchPreview()
         {
             return View();
         }
-
+        // Get method about searching all products by given optins, name, pagenumber and sorting the product results
         [HttpGet]
         public ActionResult Search(string option,string search, int? pageNumber, string sort)
             {
@@ -174,19 +175,9 @@ namespace BicycleWorldShop.Controllers
             ViewBag.SortReviews = sort == "Customer Reviews Descending" ? "Customer Reviews Ascending" : "Customer Reviews Descending";
             ViewBag.SortPrice = sort == "Price High to Low" ? "Price Low to High" : "Price High to Low";
 
-            //if the sort parameter is null or empty then we are initializing the value as descending name  
-            //  ViewBag.SortByReviewsAsc = sort== "Customer Reviews Descending" ? "Customer Reviews Ascending" : "";
-            //    ViewBag.SortByReviewsDesc= sort== "Customer Reviews Ascending" ? "Customer Reviews Descending" : "";
-            //if the sort value is gender then we are initializing the value as descending gender  
-            //    ViewBag.SortByPriceDesc = sort== "Price Low to High" ? "Price High to Low" : "";
-            //   ViewBag.SortByPriceAsc = sort == "Price Low to High" ? "Price Low to High" : "";
+          var records = db.Products.AsQueryable();          
 
-            //here we are converting the db.Students to AsQueryable so that we can invoke all the extension methods on variable records.  
-            var records = db.Products.AsQueryable();
-
-          
-
-         //   List<Product> result=new List<Product>();
+            // find the products by selected option
 
            if (option == "Gender")
             {
@@ -219,7 +210,7 @@ namespace BicycleWorldShop.Controllers
             }
 
 
-
+           // sorting the results
             if (sort != "")
             {
 
@@ -231,7 +222,7 @@ namespace BicycleWorldShop.Controllers
                 {
 
                     ViewBag.SortType = "Customer Reviews Descending";
-                    //// da se najdat site revies za opredelen proizvod...
+                    //// da se najdat site reviews za opredelen proizvod...
                     var partialresult = (from p in records
                                          from a in db.Reviews
                                          where p.Id == a.ProductId
@@ -340,7 +331,6 @@ namespace BicycleWorldShop.Controllers
 
                     }
 
-
                     foreach (var item in records)
                     {
                         for (int i = 0; i < partialresult.Count(); i++)
@@ -375,18 +365,12 @@ namespace BicycleWorldShop.Controllers
 
                     }
 
-
-
-
                     records = orderedlist.AsQueryable();
 
                 }
 
 
             }
-
-
-
 
             if (sort == "Price High to Low")
             { records = records.OrderByDescending(x => x.Price); }
@@ -396,24 +380,21 @@ namespace BicycleWorldShop.Controllers
             }
             else if (sort == "")
 
-
             { records = records.OrderBy(x => x.Name);
 
-            }
-              
-            
-        
-           
-
+            }  
+                    
             return View("SearchPreview", records.ToPagedList(pageNumber ?? 1, 6));
         }
 
-
+        //  return list from all categories
         public List<Category> GetAllCategories()
         {
           
             return db.Categories.ToList();
         }
+
+        // Preview the product and the details about the product
         [HttpGet]
         public ActionResult Preview(string  id)
         {
@@ -483,7 +464,7 @@ namespace BicycleWorldShop.Controllers
             return View(prs);
 
         }
-
+        // Preview all reviews about certain product with particular order 
         [HttpGet]
         public ActionResult PreviewReviews(int id, int? pageNumber, string datesorder)
         {
@@ -532,11 +513,10 @@ namespace BicycleWorldShop.Controllers
             ViewBag.NumReviews = counter; 
          
             return PartialView(reviewsfound.ToList().ToPagedList(pageNumber ?? 1, 5));
-
         }
 
 
-
+        // Post Action about checking the availability of some product with certain size or color
         [HttpPost]
         public ActionResult Availability(string color,string size,string name)
         {

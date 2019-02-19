@@ -10,11 +10,11 @@ using BicycleWorldShop.ViewModels;
 
 namespace BicycleWorldShop.Controllers
 {
-
+    // Controller about the shopping cart with appropriate actions
     public class ShoppingCartController : Controller
-    {
+    { 
         private BicycleWorldShopContext db = new BicycleWorldShopContext();
-
+        // Action method about preview the shopping cart with items
         public ActionResult Index()
         {
             var cart = ShoppingCart.GetCart(this.HttpContext);
@@ -27,7 +27,7 @@ namespace BicycleWorldShop.Controllers
 
             return View(viewModel);
         }
-
+        // Adding item or a product to the shopping cart and redirect to preview new added product.
         public ActionResult AddToCart(int id)
         {
             var addedProduct = db.Products.Single(product => product.Id == id);
@@ -38,7 +38,7 @@ namespace BicycleWorldShop.Controllers
 
             return RedirectToAction("Index");
         }
-
+        // Post action method about removing product by id and sending return informations about delete!
         [HttpPost]
         public ActionResult RemoveFromCart(int id)
         {
@@ -59,7 +59,7 @@ namespace BicycleWorldShop.Controllers
 
             return Json(results);
         }
-
+        // Action about Cart summary
         [ChildActionOnly]
         public ActionResult CartSummary()
         {

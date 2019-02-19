@@ -10,18 +10,20 @@ using BicycleWorldShop.DAL;
 using BicycleWorldShop.Models;
 
 namespace BicycleWorldShop.Controllers
-{
+{// Controller about basic operations with reviews from the users of the web app.
     public class ReviewsController : Controller
     {
         private BicycleWorldShopContext db = new BicycleWorldShopContext();
 
         // GET: Reviews
+        // Get a list of reviews from the database.
         public ActionResult Index()
         {
             return View(db.Reviews.ToList());
         }
 
         // GET: Reviews/Details/5
+        // View a details for a review with a specific id
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -37,24 +39,20 @@ namespace BicycleWorldShop.Controllers
         }
 
         // GET: Reviews/Create
+
+            // Action method to show  necessary data to view form for creating new review for particular product
         [HttpGet]
         public ActionResult Create( int Id)
         {
-           
+           // get the product
                 var productt = from a in db.Products
                            where a.Id == Id
                            select a;
                 Product p = (Product) productt.FirstOrDefault();
-                ViewData["MProduct"] = p;
-        
+                ViewData["MProduct"] = p;      
          
-            //   ViewBag.Name = p.Name;
-            //    ViewBag.Brand = p.Brand;
-            //    ViewBag.Price = p.Price;
-            //    ViewBag.Description = p.Description;
-            //    ViewBag.Color = p.Color;
-            //    ViewBag.Id = Id;
-
+           
+            //get the category for the product
             var category = from a in db.Categories
                            where a.Id == p.Category_Id
                            select a;
@@ -64,6 +62,8 @@ namespace BicycleWorldShop.Controllers
             ViewData["MyCategory"] = categ;
             int ratingProduct = 0;
             int counter = 0;
+
+            //get the average rating
             try
             {
                 var reviews = from a in db.Reviews
@@ -99,6 +99,7 @@ namespace BicycleWorldShop.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        // Post Action method about saving the new review into the database. 
         public ActionResult Create([Bind(Include = "Id,ProductId,Headline,Rating,Pros,Cons,BestUses,DescribeYourself,CyclingStyle,Gift,Comments,BottomLine,Nickname,Location,Email,DatePosted")] Review review)
         {
             if (ModelState.IsValid)
@@ -112,12 +113,13 @@ namespace BicycleWorldShop.Controllers
                 return RedirectToAction("Preview","Products",new {id= p.Name });
             }
 
-       //     return View(review);
+       
 
             return RedirectToAction("LogIn", "Account", new { area = "Admin" });
         }
 
         // GET: Reviews/Edit/5
+        //Action which is used to show the view which edits review with specific id.
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -137,6 +139,7 @@ namespace BicycleWorldShop.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        // Action to save changes after edit
         public ActionResult Edit([Bind(Include = "Id,ProductId,Headline,Rating,Pros,Cons,BestUses,DescribeYourself,CyclingStyle,Gift,Comments,BottomLine,Nickname,Location,Email,DatePosted")] Review review)
         {
             if (ModelState.IsValid)
@@ -149,6 +152,7 @@ namespace BicycleWorldShop.Controllers
         }
 
         // GET: Reviews/Delete/5
+        // Action is used about deletation of the review
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -166,6 +170,7 @@ namespace BicycleWorldShop.Controllers
         // POST: Reviews/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        // Action is used for deleting the product from the database
         public ActionResult DeleteConfirmed(int id)
         {
             Review review = db.Reviews.Find(id);
@@ -173,7 +178,7 @@ namespace BicycleWorldShop.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
-
+        // Action to dispose data from the database
         protected override void Dispose(bool disposing)
         {
             if (disposing)

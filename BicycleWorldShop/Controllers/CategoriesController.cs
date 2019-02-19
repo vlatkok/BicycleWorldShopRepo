@@ -11,6 +11,7 @@ using System.Data.Entity;
 
 namespace MvcAffableBean.Controllers
 {
+  // This controller is used about creating new types of categories and subcategories, editing and deletion of new categories
     public class CategoriesController : Controller
     {
         private BicycleWorldShopContext db = new BicycleWorldShopContext();

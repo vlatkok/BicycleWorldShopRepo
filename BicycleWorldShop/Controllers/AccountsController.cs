@@ -8,9 +8,9 @@ using System.Web.Security;
 using BicycleWorldShop.Models;
 
 namespace BicycleWorldShop.Controllers
-{
+{// This controller is used about user authentication and us
     public class AccountsController : Controller
-    {
+    {  
         private void MigrateShoppingCart(string userName)
         {
             var cart = ShoppingCart.GetCart(this.HttpContext);
@@ -23,7 +23,7 @@ namespace BicycleWorldShop.Controllers
         {
             return View();
         }
-
+        // Post action about user log in to the website
         [HttpPost]
         public ActionResult LogOn(LogOnModel model, string returnUrl)
         {
@@ -60,7 +60,7 @@ namespace BicycleWorldShop.Controllers
             // If we got this far, something failed, redisplay form
             return View(model);
         }
-
+        // Action about user signout
         public ActionResult LogOff()
         {
             FormsAuthentication.SignOut();
@@ -74,7 +74,7 @@ namespace BicycleWorldShop.Controllers
         {
             return View();
         }
-
+        // Post action of the registration of new user 
         [HttpPost]
         public ActionResult Register(RegisterModel model)
         {
@@ -114,7 +114,7 @@ namespace BicycleWorldShop.Controllers
         {
             return View();
         }
-
+        // Action that changes old user password with new.
         [Authorize]
         [HttpPost]
         public ActionResult ChangePassword(ChangePasswordModel model)
@@ -148,12 +148,12 @@ namespace BicycleWorldShop.Controllers
             // If we got this far, something failed, redisplay form
             return View(model);
         }
-
+        
         public ActionResult ChangePasswordSuccess()
         {
             return View();
         }
-
+        // Action about errors of the user activities
         #region Status Codes
         private static string ErrorCodeToString(MembershipCreateStatus createStatus)
         {

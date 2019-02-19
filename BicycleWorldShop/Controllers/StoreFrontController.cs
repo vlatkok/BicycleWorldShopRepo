@@ -10,15 +10,18 @@ using System.Web.Script.Serialization;
 
 namespace BicycleWorldShop.Controllers
 {
+
+    //This controller is used for presentation of items in model after chosen category by the user. 
     public class StoreFrontController : Controller
     {
 
         private BicycleWorldShopContext db = new BicycleWorldShopContext();
-
+        // List of products from the chosen category. This list temporary saves data for later manipulaion.
        public static IEnumerable<Product> productsList;
        
 
         // GET: StoreFront
+        // This action selects all products from the chosen category
         [HttpGet]
         public ActionResult Index(string id)        
         {
@@ -26,7 +29,7 @@ namespace BicycleWorldShop.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            // Categories.FirstOrDefault(p=>p.SubCategoryName=="Mountain").Id
+           
          int categoryid =  db.Categories.FirstOrDefault(p => p.SubCategoryName == id.ToString().Trim()).Id;
             if (categoryid == null)
             {
@@ -37,11 +40,7 @@ namespace BicycleWorldShop.Controllers
                            where m.Category_Id == categoryid
                            group m by m.Name into g
                            select g.FirstOrDefault();
-/*
-            productItems = from t in productItems
-                       group t by t.Name into g
-                       select g.First();
-*/
+
 
             productsList = productItems.AsEnumerable().Distinct().ToList();         
         
@@ -51,7 +50,7 @@ namespace BicycleWorldShop.Controllers
         }
 
       
-      
+      // This action selects all products for presentation to the view, from  list with product id's
         public PartialViewResult GetList(string klasId)
         {
             
@@ -74,68 +73,16 @@ namespace BicycleWorldShop.Controllers
               
                products = productsList.Where(t => ids.Contains(t.Size));
 
-
-
-                //   productsList = ViewBag.Products;
-
-                /*
-
-                            if (!string.IsNullOrEmpty(klasId))
-                            {
-                                float a;
-                                for (int i = 0; i < klasId.Split(',').Length; i++)
-                                {
-                                    a = (float)Convert.ToDouble(klasId.Split(',')[i]);
-
-
-                                    ids.Add(a);
-                                }
-
-                                products = productsList.Where(t => ids.Contains(t.Size));
-
-                            */
-           
-               
-           //     prs = products.AsQueryable();
-
-                /*         foreach (IEnumerable<Product> p in app)
-                         { productsList.add(p); }
-
-
-                */
-
-            }
-
-            //    else
-            //    {
-            //         rows = entities.Customers.Take(5);
-            // 
-
-            /*     var productresults = (from v in prs
-                              select new
-                            {
-                                 v.Name,
-                                v.Price                          
-                              }).ToList();
-
-
-        */
-          
+            }          
             
            return PartialView("ProductsPreview",products);
-        // return   new JavaScriptSerializer().Serialize(productresults);
-         //   return  Json(productresults);
-         //  return Json(productsList);
+    
         }
-
+        // In this action method, list of selected filter items from the filter menu in the view, is used to find the appropriate products which match with previous criteria from the list
         [HttpPost]
         public ActionResult ProductsPreview(string klasId)
-        {
-           
-
-
-            //  IQueryable<Product> prs = null;
-
+        {        
+            
              IEnumerable<Product> products = null;
         
 
@@ -151,30 +98,17 @@ namespace BicycleWorldShop.Controllers
 
 
             {
-                // float a;
-
-                // string 
-                //    for (int i = 0; i < klasId.Split(',').Length; i++)
-                //      {
-                //        a = (float)Convert.ToDouble(klasId.Split(',')[i]);
-
-
-                ///   ids.Add(a);
-                //      }
+                
 
 
                    for (int i = 0; i < klasId.Split(',').Length; i++)
                 {
-                    //a = (float)Convert.ToDouble(klasId.Split(',')[i]);
+                    
                     items.Add(klasId.Split(',')[i]);
 
-                //    if ( == "Brand") { brands.Add(klasId.Split(',')[i]); }
-               //     else if()
-
-                    ///   ids.Add(a);
-             //       ++i;
+          
                 }
-
+                   // scheduling the selected items by appropriated category 
                 for (int i = 0; i < (items.Count-1); i++)
                 {                    
                    
@@ -190,14 +124,11 @@ namespace BicycleWorldShop.Controllers
                 IEnumerable<Product> siz = null;
                 IEnumerable<Product> gend = null;
                 IEnumerable<Product> lu = null;
-
-
-            //    products=from v in productsList
-            ///             where 
+                
 
 
                 
-
+                // selecting the products from the already chosen criteria
                 if (brands.Count > 0) { bra = productsList.Where(t => brands.Contains(t.Brand)); }
 
                 if (size.Count > 0) { siz = productsList.Where(t => size.Contains(t.Size)); }
@@ -223,9 +154,8 @@ namespace BicycleWorldShop.Controllers
                     }
                 }
 
-                // .Where(c => toBeFilteredCarIds.Any(g => g == c.CarId) && c.CarStatusId == 1);
-                //  products = productsList.Where(c => ids.Any(g => g == c.Size));
-
+              
+                // Concatanation of the found products
                 IEnumerable<Product> templist = Enumerable.Empty<Product>();
                 int typesChanged = 0; //counter that counts types  of filter clicked
                 if (bra != null)
@@ -293,38 +223,12 @@ namespace BicycleWorldShop.Controllers
 
                     products = Enumerable.Empty<Product>();
 
-                }
-
-
-        
-
-
-
-
-
-
-               
-                             
-
-
-
-
-
-
-
-
-                //     products = bra.Intersect(siz).Intersect(gend).Intersect(lu).Intersect(pric).ToList();
-
-
-
-                //   products = productsList.Where(t => size.Contains(t.Size)).ToList();     
-
+                }  
+                                          
+                       
 
             }
-
-
-
-
+            // If found products from the filtering is zero return the same products or don't take action
             if (products == null)
             {
 
@@ -332,34 +236,23 @@ namespace BicycleWorldShop.Controllers
 
             }
 
-
-
             try
-            {
-
-               
+            {              
 
 
             }
             catch (NullReferenceException e)
-            { }
-        
+            { }      
 
 
 
             return PartialView("ProductsPreview", products);
 
-            // return   new JavaScriptSerializer().Serialize(productresults);
-            //   return  Json(productresults);
-            //  return Json(productsList);
+          
         }
 
 
-
-
-
-
-        //
+        // This action is used to find data( Category and Brands) for  filling filter menu into the view 
         // GET: /Store/GenreMenu
         [ChildActionOnly]
         public ActionResult FilterMenu(int id)
@@ -380,8 +273,7 @@ namespace BicycleWorldShop.Controllers
             {
                 return HttpNotFound();
             }
-
-            //db.Categories.ToList();
+          
 
             //get all brands from that category ///
 
@@ -394,7 +286,7 @@ namespace BicycleWorldShop.Controllers
 
             return PartialView(categories.ToList());
         }
-
+        // This action is used for easy navigation in page. Finds and sends to the view selected category and subcategory name
         [ChildActionOnly]
         public ActionResult Navigation(int id)
         {

@@ -6,11 +6,11 @@ using System.Web;
 using System.Web.Mvc;
 
 namespace BicycleWorldShop.Controllers
-{
+{// This controller is used for administrator purposes ( manipulation with data)
     public class FileUploadController : Controller
     {
        
-
+        // Action which reads all images from server location for further presentation
         // GET: FileUpload
         public ActionResult Index()
         {
@@ -21,7 +21,7 @@ namespace BicycleWorldShop.Controllers
 
             return View();
         }
-
+        // Post method for the upload of product images with appropriete parameters
         [HttpPost]
         public ActionResult Index(HttpPostedFileBase[] files)
         {
@@ -61,7 +61,7 @@ namespace BicycleWorldShop.Controllers
                .Select(fn => "~/Content/Images/Products/" + Path.GetFileName(fn));
             return View();
         }
-
+        // Action about deleting already saved product image to the server
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult DeletePhoto(string photoFileName)

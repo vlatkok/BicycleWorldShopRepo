@@ -7,18 +7,20 @@ using BicycleWorldShop.Models;
 using BicycleWorldShop.DAL;
 
 namespace BicycleWorldShop.Controllers
-{
+{// This controller is used for checkout of the shopping cart
     [Authorize]
     public class CheckoutController : Controller
     {
 
         private BicycleWorldShopContext db = new BicycleWorldShopContext();
         const String PromoCode = "FREE";
+
+        
         public ActionResult AddressAndPayment()
         {
             return View();
         }
-
+        // Post action in which the order from the shopping cart is created
         [HttpPost]
         public ActionResult AddressAndPayment(FormCollection values)
         {
@@ -54,7 +56,7 @@ namespace BicycleWorldShop.Controllers
                 return View(order);
             }
         }
-
+        // Completion of created order
         public ActionResult Complete(int id)
         {
             bool isValid = db.CustomerOrders.Any(
