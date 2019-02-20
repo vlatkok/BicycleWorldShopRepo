@@ -101,7 +101,7 @@ namespace BicycleWorldShop.Controllers
                     var credential = new System.Net.NetworkCredential
                     { //Website's official e-mail username
                         UserName = "vkoctesting@gmail.com",  // replace with valid value
-                        Password = "test12345@"  // replace with valid value
+                        Password = ""  // replace with valid value
                         //website's official e-mail password
                     };
                     smtp.Credentials = credential;
